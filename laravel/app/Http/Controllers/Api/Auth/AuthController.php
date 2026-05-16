@@ -59,10 +59,10 @@ class AuthController extends Controller
     {
         $user = $request->user();
         $data = $request->validate([
-            'name'   => 'sometimes|string|max:100',
-            'phone'  => 'sometimes|string|max:15|unique:users,phone,' . $user->id,
-            'gender' => 'sometimes|in:male,female,other',
-            'dob'    => 'sometimes|date|before:today',
+            'name'   => 'sometimes|nullable|string|max:100',
+            'phone'  => 'sometimes|nullable|string|max:15|unique:users,phone,' . $user->id,
+            'gender' => 'sometimes|nullable|in:male,female,other',
+            'dob'    => 'sometimes|nullable|date|before:today',
         ]);
         $user->update($data);
         return response()->json(['success' => true, 'data' => $user->fresh()]);

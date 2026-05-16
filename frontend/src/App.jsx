@@ -6,7 +6,6 @@ import Layout from './components/layout/Layout';
 import AdminLayout from './pages/admin/AdminLayout';
 import AccountLayout from './pages/account/AccountLayout';
 import LoadingSpinner from './components/ui/LoadingSpinner';
-import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { PWAProvider } from './contexts/PWAContext';
 
 // Public pages
@@ -49,7 +48,12 @@ const AdminReturns = lazy(() => import('./pages/admin/Returns'));
 const AdminBanners = lazy(() => import('./pages/admin/Banners'));
 const AdminReports = lazy(() => import('./pages/admin/Reports'));
 const AdminSettings = lazy(() => import('./pages/admin/Settings'));
-const AdminReviews = lazy(() => import('./pages/admin/Reviews'));
+const AdminReviews    = lazy(() => import('./pages/admin/Reviews'));
+const AdminFlashSales = lazy(() => import('./pages/admin/FlashSales'));
+const AdminNewArrivals = lazy(() => import('./pages/admin/NewArrivals'));
+const AdminMenuManager = lazy(() => import('./pages/admin/MenuManager'));
+const AdminFooterManager = lazy(() => import('./pages/admin/FooterManager'));
+const AdminHeaderManager = lazy(() => import('./pages/admin/HeaderManager'));
 
 const Fallback = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -73,7 +77,6 @@ export default function App() {
   return (
     <PWAProvider>
     <BrowserRouter>
-      <PWAInstallPrompt />
       <Suspense fallback={<Fallback />}>
         <Routes>
           {/* Storefront */}
@@ -123,6 +126,11 @@ export default function App() {
             <Route path="reports" element={<AdminReports />} />
             <Route path="reviews" element={<AdminReviews />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="flash-sales"    element={<AdminFlashSales />} />
+            <Route path="new-arrivals"   element={<AdminNewArrivals />} />
+            <Route path="menu-manager"   element={<AdminMenuManager />} />
+            <Route path="footer-manager" element={<AdminFooterManager />} />
+            <Route path="header-manager" element={<AdminHeaderManager />} />
           </Route>
 
           <Route path="*" element={<NotFoundPage />} />

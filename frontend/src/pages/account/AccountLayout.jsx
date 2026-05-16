@@ -23,7 +23,7 @@ export default function AccountLayout() {
           <div className="border p-5 mb-4">
             <div className="flex items-center gap-3 mb-1">
               {user.avatar ? (
-                <img src={user.avatar} alt={user.name} className="w-12 h-12 object-cover" />
+                <img src={`/storage/${user.avatar}`} alt={user.name} className="w-12 h-12 object-cover" />
               ) : (
                 <div className="w-12 h-12 bg-brand-primary/10 flex items-center justify-center">
                   <User size={20} className="text-brand-primary" />

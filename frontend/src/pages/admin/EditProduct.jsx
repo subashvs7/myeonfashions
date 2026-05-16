@@ -17,13 +17,13 @@ export default function EditProduct() {
 
   const { data: product, refetch: refetchProduct } = useQuery({
     queryKey: ['admin-product', id],
-    queryFn: () => adminApi.getProduct(id).then(r => r.data.data),
+    queryFn: () => adminApi.getProduct(id).then(r => r.data.data ?? null),
   });
 
   // Use admin API — returns all categories regardless of active/menu status
   const { data: categories = [] } = useQuery({
     queryKey: ['admin-categories'],
-    queryFn: () => adminApi.getCategories().then(r => r.data.data),
+    queryFn: () => adminApi.getCategories().then(r => r.data.data ?? []),
   });
 
   useEffect(() => {
@@ -166,7 +166,7 @@ export default function EditProduct() {
             <div className="flex gap-2 flex-wrap">
               {product.images.map(img => (
                 <div key={img.id} className="relative group">
-                  <img src={img.url ?? img.image_path} alt="" className="w-20 h-24 object-cover" />
+                  <img src={img.url ? img.url : `/storage/${img.image_path}`} alt="" className="w-20 h-24 object-cover" />
                   <button type="button"
                     onClick={() => deleteImageMutation.mutate(img.id)}
                     disabled={deleteImageMutation.isPending}

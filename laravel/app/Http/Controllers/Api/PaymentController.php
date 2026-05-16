@@ -14,6 +14,10 @@ class PaymentController extends Controller
 
     public function createOrder(Request $request)
     {
+        if (empty(config('razorpay.key_id')) || empty(config('razorpay.key_secret'))) {
+            return response()->json(['success' => false, 'message' => 'Online payment is not configured. Please use Cash on Delivery.'], 422);
+        }
+
         $data  = $request->validate(['order_id' => 'required|integer|exists:orders,id']);
         $order = Order::where('user_id', $request->user()->id)->findOrFail($data['order_id']);
 

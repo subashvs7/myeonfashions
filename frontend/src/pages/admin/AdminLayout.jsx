@@ -4,6 +4,7 @@ import {
   LayoutDashboard, Package, Grid, ShoppingBag, Users,
   Tag, BarChart2, Truck, RotateCcw, Image, Warehouse,
   LogOut, ChevronRight, Settings, Star, Bell,
+  Zap, Sparkles, Menu, Link, LayoutTemplate,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -33,17 +34,22 @@ const NAV_GROUPS = [
   {
     label: 'Marketing',
     items: [
-      { to: '/admin/coupons',  icon: Tag,      label: 'Coupons' },
-      { to: '/admin/banners',  icon: Image,    label: 'Banners' },
-      { to: '/admin/reviews',  icon: Star,     label: 'Reviews' },
-      { to: '/admin/reports',  icon: BarChart2, label: 'Reports' },
+      { to: '/admin/flash-sales',  icon: Zap,      label: 'Flash Sales' },
+      { to: '/admin/new-arrivals', icon: Sparkles,  label: 'New Arrivals' },
+      { to: '/admin/coupons',      icon: Tag,       label: 'Coupons' },
+      { to: '/admin/banners',      icon: Image,     label: 'Banners' },
+      { to: '/admin/reviews',      icon: Star,      label: 'Reviews' },
+      { to: '/admin/reports',      icon: BarChart2, label: 'Reports' },
     ],
   },
   {
     label: 'Configuration',
     items: [
-      { to: '/admin/shipping',  icon: Truck,    label: 'Shipping' },
-      { to: '/admin/settings',  icon: Settings, label: 'Settings' },
+      { to: '/admin/header-manager', icon: LayoutTemplate, label: 'Header' },
+      { to: '/admin/menu-manager',   icon: Menu,           label: 'Menu' },
+      { to: '/admin/footer-manager', icon: Link,           label: 'Footer' },
+      { to: '/admin/shipping',       icon: Truck,          label: 'Shipping' },
+      { to: '/admin/settings',       icon: Settings,       label: 'Settings' },
     ],
   },
 ];

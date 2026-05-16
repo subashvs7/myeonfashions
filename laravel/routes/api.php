@@ -29,6 +29,11 @@ use App\Http\Controllers\Api\Admin\AdminReviewController;
 use App\Http\Controllers\Api\Admin\AdminBannerController;
 use App\Http\Controllers\Api\Admin\AdminReportController;
 use App\Http\Controllers\Api\Admin\AdminSettingController;
+use App\Http\Controllers\Api\Admin\AdminFlashSaleController;
+use App\Http\Controllers\Api\Admin\AdminNewArrivalController;
+use App\Http\Controllers\Api\Admin\AdminMenuController;
+use App\Http\Controllers\Api\Admin\AdminFooterController;
+use App\Http\Controllers\Api\Admin\AdminHeaderController;
 
 // PUBLIC ROUTES
 Route::post('/auth/register',        [AuthController::class, 'register']);
@@ -164,4 +169,33 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     Route::get('/reports/customers', [AdminReportController::class, 'customers']);
     Route::get('/reports/inventory', [AdminReportController::class, 'inventory']);
     Route::get('/reports/export',    [AdminReportController::class, 'export']);
+
+    // Flash Sales
+    Route::apiResource('/flash-sales', AdminFlashSaleController::class);
+    Route::post('/flash-sales/{id}/products',              [AdminFlashSaleController::class, 'addProducts']);
+    Route::delete('/flash-sales/{id}/products/{productId}',[AdminFlashSaleController::class, 'removeProduct']);
+
+    // New Arrivals
+    Route::get('/new-arrivals',             [AdminNewArrivalController::class, 'index']);
+    Route::put('/new-arrivals/{productId}', [AdminNewArrivalController::class, 'toggle']);
+
+    // Menu Management
+    Route::get('/menu-items',          [AdminMenuController::class, 'index']);
+    Route::post('/menu-items',         [AdminMenuController::class, 'store']);
+    Route::put('/menu-items/{id}',     [AdminMenuController::class, 'update']);
+    Route::delete('/menu-items/{id}',  [AdminMenuController::class, 'destroy']);
+    Route::post('/menu-items/reorder', [AdminMenuController::class, 'reorder']);
+
+    // Footer Management
+    Route::get('/footer-sections',                       [AdminFooterController::class, 'sections']);
+    Route::post('/footer-sections',                      [AdminFooterController::class, 'createSection']);
+    Route::put('/footer-sections/{id}',                  [AdminFooterController::class, 'updateSection']);
+    Route::delete('/footer-sections/{id}',               [AdminFooterController::class, 'deleteSection']);
+    Route::post('/footer-sections/{sectionId}/links',    [AdminFooterController::class, 'createLink']);
+    Route::put('/footer-links/{linkId}',                 [AdminFooterController::class, 'updateLink']);
+    Route::delete('/footer-links/{linkId}',              [AdminFooterController::class, 'deleteLink']);
+
+    // Header Management
+    Route::get('/header-settings', [AdminHeaderController::class, 'index']);
+    Route::put('/header-settings', [AdminHeaderController::class, 'update']);
 });

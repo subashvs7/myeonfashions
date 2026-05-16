@@ -19,7 +19,7 @@ const STEPS = ['Address', 'Payment', 'Confirm'];
 export default function CheckoutPage() {
   const [step, setStep]             = useState(0);
   const [selectedAddressId, setSA]  = useState(null);
-  const [paymentMethod, setPM]      = useState('razorpay');
+  const [paymentMethod, setPM]      = useState(null);
   const [showAddForm, setShowForm]  = useState(false);
   const navigate                    = useNavigate();
   const { clearCart }               = useCartStore();
@@ -35,19 +35,20 @@ export default function CheckoutPage() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const onlineEnabled = config?.['payment.online_enabled'] !== '0';
-  const codEnabled    = config?.['payment.cod_enabled'] === '1';
+  const onlineEnabled      = config?.['payment.online_enabled'] !== '0';
+  const razorpayConfigured = config?.['payment.razorpay_configured'] === '1';
+  const codEnabled         = config?.['payment.cod_enabled'] === '1';
 
   // Build available methods dynamically
   const paymentMethods = [
-    onlineEnabled && { value: 'razorpay', label: 'Pay Online (UPI, Card, Net Banking)', desc: 'Secured by Razorpay' },
-    codEnabled    && { value: 'cod',      label: 'Cash on Delivery',                    desc: 'Pay when your order arrives' },
+    (onlineEnabled && razorpayConfigured) && { value: 'razorpay', label: 'Pay Online (UPI, Card, Net Banking)', desc: 'Secured by Razorpay' },
+    codEnabled && { value: 'cod', label: 'Cash on Delivery', desc: 'Pay when your order arrives' },
   ].filter(Boolean);
 
-  // Reset to first available method when config loads
+  // Auto-select first available method when config loads
   useEffect(() => {
-    if (paymentMethods.length && !paymentMethods.find(m => m.value === paymentMethod)) {
-      setPM(paymentMethods[0].value);
+    if (paymentMethods.length > 0) {
+      setPM(prev => (prev && paymentMethods.find(m => m.value === prev)) ? prev : paymentMethods[0].value);
     }
   }, [config]);
 
@@ -94,14 +95,17 @@ export default function CheckoutPage() {
         rzp.open();
       } catch (err) {
         const isNetwork = !err.response;
-        if (isNetwork) {
-          toast.error('Network changed during payment setup. Your order is saved — retry payment from My Orders.');
-        } else {
-          toast.error(err.response?.data?.message || 'Payment initialization failed. Please try again.');
-        }
-        // Order was created — navigate so the user can retry payment from their order
         clearCart();
-        navigate(`/order-success/${order.id}`);
+        if (isNetwork) {
+          // Network drop — order is saved, go to success page so they see their order ID
+          toast.error('Network issue during payment. Your order is saved — retry payment from My Orders.');
+          navigate(`/order-success/${order.id}`);
+        } else {
+          // Gateway/config error — order exists but payment not started
+          const msg = err.response?.data?.message || 'Payment setup failed. Your order is saved.';
+          toast.error(`${msg} Order #${order.order_number} — retry from My Orders.`);
+          navigate('/account/orders');
+        }
       }
     },
     onError: (e) => toast.error(e.response?.data?.message || 'Order failed'),
@@ -109,6 +113,8 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = () => {
     if (!selectedAddressId) return toast.error('Select a delivery address');
+    if (!paymentMethod) return toast.error('Select a payment method');
+    if (!paymentMethods.find(m => m.value === paymentMethod)) return toast.error('Selected payment method is unavailable');
     createOrder({ address_id: selectedAddressId, payment_method: paymentMethod });
   };
 
@@ -177,7 +183,7 @@ export default function CheckoutPage() {
               </div>
               <div className="flex gap-3">
                 <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
-                <Button onClick={handlePlaceOrder} loading={creating}>
+                <Button onClick={handlePlaceOrder} loading={creating} disabled={!paymentMethod}>
                   {paymentMethod === 'cod' ? 'Place Order' : 'Proceed to Pay'}
                 </Button>
               </div>

@@ -4,6 +4,7 @@ import Footer from './Footer';
 import CartDrawer from './CartDrawer';
 import MobileNav from './MobileNav';
 import MobileBottomBar from './MobileBottomBar';
+import PWAInstallPrompt from '../PWAInstallPrompt';
 
 export default function Layout() {
   return (
@@ -16,6 +17,7 @@ export default function Layout() {
       </main>
       <MobileBottomBar />
       <Footer />
+      <PWAInstallPrompt />
     </>
   );
 }

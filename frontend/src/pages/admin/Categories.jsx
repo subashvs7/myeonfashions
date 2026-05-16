@@ -32,7 +32,7 @@ export default function AdminCategories() {
   // Backend returns only root categories with children.children nested
   const { data: roots = [] } = useQuery({
     queryKey: ['admin-categories'],
-    queryFn: () => adminApi.getCategories().then(r => r.data.data),
+    queryFn: () => adminApi.getCategories().then(r => r.data.data ?? []),
   });
 
   const saveMutation = useMutation({

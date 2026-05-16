@@ -67,7 +67,7 @@ export default function MyProfile() {
       <div className="flex items-center gap-4 mb-8 p-5 border">
         <div className="relative">
           <div className="w-20 h-20 bg-brand-primary/10 overflow-hidden">
-            {user?.avatar ? <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+            {user?.avatar ? <img src={`/storage/${user.avatar}`} alt={user.name} className="w-full h-full object-cover" />
               : <div className="w-full h-full flex items-center justify-center text-brand-primary text-2xl font-bold">{user?.name?.[0]?.toUpperCase()}</div>}
           </div>
           <label className="absolute -bottom-1 -right-1 w-7 h-7 bg-brand-primary text-white flex items-center justify-center cursor-pointer hover:bg-brand-secondary transition-colors">

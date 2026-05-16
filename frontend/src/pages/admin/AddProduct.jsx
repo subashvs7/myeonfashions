@@ -24,7 +24,7 @@ export default function AddProduct() {
   // Use admin API — returns all categories regardless of active/menu status
   const { data: categories = [] } = useQuery({
     queryKey: ['admin-categories'],
-    queryFn: () => adminApi.getCategories().then(r => r.data.data),
+    queryFn: () => adminApi.getCategories().then(r => r.data.data ?? []),
   });
 
   const flatCategories = [];

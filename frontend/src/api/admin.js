@@ -93,6 +93,39 @@ export const adminApi = {
   orderInvoice: (id) => api.get(`/admin/orders/${id}/invoice`),
   manifestDownload: (params) => api.get('/admin/orders/manifest', { params, responseType: 'blob' }),
 
+  // Flash Sales
+  getFlashSales: () => api.get('/admin/flash-sales'),
+  getFlashSale: (id) => api.get(`/admin/flash-sales/${id}`),
+  createFlashSale: (data) => api.post('/admin/flash-sales', data),
+  updateFlashSale: (id, data) => api.put(`/admin/flash-sales/${id}`, data),
+  deleteFlashSale: (id) => api.delete(`/admin/flash-sales/${id}`),
+  addFlashSaleProducts: (id, data) => api.post(`/admin/flash-sales/${id}/products`, data),
+  removeFlashSaleProduct: (saleId, productId) => api.delete(`/admin/flash-sales/${saleId}/products/${productId}`),
+
+  // New Arrivals
+  getNewArrivals: (params) => api.get('/admin/new-arrivals', { params }),
+  toggleNewArrival: (productId) => api.put(`/admin/new-arrivals/${productId}`),
+
+  // Menu Management
+  getMenuItems: (params) => api.get('/admin/menu-items', { params }),
+  createMenuItem: (data) => api.post('/admin/menu-items', data),
+  updateMenuItem: (id, data) => api.put(`/admin/menu-items/${id}`, data),
+  deleteMenuItem: (id) => api.delete(`/admin/menu-items/${id}`),
+  reorderMenuItems: (data) => api.post('/admin/menu-items/reorder', data),
+
+  // Footer Management
+  getFooterSections: () => api.get('/admin/footer-sections'),
+  createFooterSection: (data) => api.post('/admin/footer-sections', data),
+  updateFooterSection: (id, data) => api.put(`/admin/footer-sections/${id}`, data),
+  deleteFooterSection: (id) => api.delete(`/admin/footer-sections/${id}`),
+  createFooterLink: (sectionId, data) => api.post(`/admin/footer-sections/${sectionId}/links`, data),
+  updateFooterLink: (id, data) => api.put(`/admin/footer-links/${id}`, data),
+  deleteFooterLink: (id) => api.delete(`/admin/footer-links/${id}`),
+
+  // Header Management
+  getHeaderSettings: () => api.get('/admin/header-settings'),
+  updateHeaderSettings: (data) => api.put('/admin/header-settings', data),
+
   // Reports
   salesReport: (params) => api.get('/admin/reports/sales', { params }),
   profitReport: (params) => api.get('/admin/reports/profit', { params }),

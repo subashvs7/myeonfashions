@@ -216,7 +216,17 @@ export default function AdminProducts() {
                 <tr key={p.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      {p.primary_image?.image_path && <img src={p.primary_image.image_path} alt={p.name} className="w-10 h-12 object-cover flex-shrink-0" />}
+                      {p.primary_image?.image_path ? (
+                        <img
+                          src={`/storage/${p.primary_image.image_path}`}
+                          alt={p.name}
+                          className="w-10 h-12 object-cover flex-shrink-0 rounded border border-gray-100"
+                        />
+                      ) : (
+                        <div className="w-10 h-12 bg-gray-100 flex-shrink-0 rounded border border-gray-100 flex items-center justify-center text-gray-300 text-xs">
+                          No img
+                        </div>
+                      )}
                       <div>
                         <p className="font-medium">{p.name}</p>
                         <p className="text-xs text-gray-400">SKU: {p.sku}</p>

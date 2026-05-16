@@ -1,7 +1,7 @@
 ﻿import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Heart, ShoppingBag, User, Menu, X, ChevronDown, Bell, Smartphone, Download } from 'lucide-react';
+import { Search, Heart, ShoppingBag, User, Menu, X, ChevronDown, ChevronRight, Bell, Smartphone, Download } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { useCartStore } from '../../stores/cartStore';
 import { useUiStore } from '../../stores/uiStore';
@@ -27,6 +27,18 @@ export default function Header() {
     queryFn: () => categoriesApi.getAll().then(r => r.data.data),
   });
 
+  const { data: configData } = useQuery({
+    queryKey: ['public-config'],
+    queryFn: () => import('../../api/config').then(m => m.configApi.get()).then(r => r.data.data),
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const announcementEnabled = configData?.announcement_bar_enabled ?? true;
+  const announcementText    = configData?.announcement_bar_text    || 'FREE SHIPPING ON ORDERS ABOVE ₹999 | USE CODE WELCOME10 FOR 10% OFF';
+  const announcementColor   = configData?.announcement_bar_color   || 'bg-brand-primary';
+  const announcementLink    = configData?.announcement_bar_link    || null;
+  const announcementLinkTxt = configData?.announcement_bar_link_text || null;
+
   const handleLogout = async () => {
     await logout();
     setUserMenuOpen(false);
@@ -39,11 +51,19 @@ export default function Header() {
         className={`sticky top-0 z-40 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-brand-bg'}`}
       >
         {/* Top bar */}
-        <div className="bg-brand-primary text-white text-xs py-2">
+        {announcementEnabled && (
+        <div className={`${announcementColor} text-white text-xs py-2`}>
           <div className="page-container flex items-center justify-between">
             <span className="hidden sm:block w-40" />
             <span className="tracking-widest text-center">
-              FREE SHIPPING ON ORDERS ABOVE ₹999 &nbsp;|&nbsp; USE CODE <strong>WELCOME10</strong> FOR 10% OFF
+              {announcementLink ? (
+                <a href={announcementLink} className="hover:underline">
+                  {announcementText}
+                  {announcementLinkTxt && <strong className="ml-2">{announcementLinkTxt}</strong>}
+                </a>
+              ) : (
+                announcementText
+              )}
             </span>
             <div className="hidden sm:flex items-center gap-2 w-40 justify-end relative">
               <Smartphone size={12} className="opacity-60 flex-shrink-0" />
@@ -115,6 +135,7 @@ export default function Header() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Main header */}
         <div className="page-container">
@@ -137,17 +158,29 @@ export default function Header() {
                   {cat.children?.length > 0 && (
                     <div className="absolute top-full left-0 bg-white border shadow-lg min-w-[200px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                       {cat.children.map((child) => (
-                        <div key={child.id}>
-                          <Link to={`/categories/${child.slug}`}
-                            className="block px-4 py-2.5 text-sm font-medium hover:bg-brand-bg hover:text-brand-primary transition-colors border-b border-gray-50">
+                        <div key={child.id} className="relative group/sub">
+                          <Link
+                            to={`/categories/${child.slug}`}
+                            className="flex items-center justify-between px-4 py-2.5 text-sm font-medium hover:bg-brand-bg hover:text-brand-primary transition-colors border-b border-gray-50"
+                          >
                             {child.name}
+                            {child.children?.length > 0 && (
+                              <ChevronRight size={14} className="text-gray-400 flex-shrink-0 ml-2" />
+                            )}
                           </Link>
-                          {child.children?.map((sub) => (
-                            <Link key={sub.id} to={`/categories/${sub.slug}`}
-                              className="block pl-7 pr-4 py-2 text-xs text-gray-500 hover:bg-brand-bg hover:text-brand-primary transition-colors border-b border-gray-50">
-                              └ {sub.name}
-                            </Link>
-                          ))}
+                          {child.children?.length > 0 && (
+                            <div className="absolute left-full top-0 bg-white border shadow-lg min-w-[180px] opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-200 z-50">
+                              {child.children.map((sub) => (
+                                <Link
+                                  key={sub.id}
+                                  to={`/categories/${sub.slug}`}
+                                  className="block px-4 py-2.5 text-sm hover:bg-brand-bg hover:text-brand-primary transition-colors border-b border-gray-50"
+                                >
+                                  {sub.name}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
