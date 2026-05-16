@@ -30,7 +30,11 @@ class AdminSettingController extends Controller
 
     public function update(Request $request)
     {
-        $input = $request->only(self::ALLOWED_KEYS);
+        // $request->only() uses data_get() which treats dots as nested path separators,
+        // so keys like 'store.address' are never found in the flat JSON body.
+        // Read the raw JSON array and intersect by exact key name instead.
+        $all   = $request->json()->all() ?: $request->post();
+        $input = array_intersect_key($all, array_flip(self::ALLOWED_KEYS));
 
         foreach ($input as $key => $value) {
             // Skip masked placeholder — user didn't change the secret

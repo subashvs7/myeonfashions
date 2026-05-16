@@ -397,6 +397,7 @@ export default function AdminSettings() {
     mutationFn: () => adminApi.updateSettings(form),
     onSuccess: () => {
       qc.invalidateQueries(['admin-settings']);
+      qc.invalidateQueries(['public-config']);
       toast.success('Settings saved successfully');
       setDirty(false);
     },
