@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class FooterSection extends Model
 {
     protected $fillable = ['title', 'position', 'is_active'];
-
-    protected $casts = ['is_active' => 'boolean'];
+    protected $casts    = ['is_active' => 'boolean', 'position' => 'integer'];
 
     public function links()
     {

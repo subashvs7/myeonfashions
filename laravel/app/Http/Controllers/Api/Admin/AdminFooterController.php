@@ -10,67 +10,70 @@ class AdminFooterController extends Controller
 {
     public function sections()
     {
-        return response()->json([
-            'success' => true,
-            'data'    => FooterSection::with('links')->orderBy('position')->get(),
-        ]);
+        $sections = FooterSection::with(['links' => fn($q) => $q->orderBy('position')])
+            ->orderBy('position')
+            ->get();
+        return response()->json(['success' => true, 'data' => $sections]);
     }
 
     public function createSection(Request $request)
     {
         $data = $request->validate([
-            'title'     => 'required|string|max:80',
-            'position'  => 'sometimes|integer',
-            'is_active' => 'sometimes|boolean',
+            'title'     => 'required|string|max:100',
+            'position'  => 'nullable|integer',
+            'is_active' => 'nullable|boolean',
         ]);
-        return response()->json(['success' => true, 'data' => FooterSection::create($data)], 201);
+        $section = FooterSection::create($data);
+        return response()->json(['success' => true, 'data' => $section], 201);
     }
 
-    public function updateSection(Request $request, int $id)
+    public function updateSection(Request $request, $id)
     {
         $section = FooterSection::findOrFail($id);
-        $section->update($request->validate([
-            'title'     => 'sometimes|string|max:80',
-            'position'  => 'sometimes|integer',
-            'is_active' => 'sometimes|boolean',
-        ]));
+        $data = $request->validate([
+            'title'     => 'sometimes|nullable|string|max:100',
+            'position'  => 'sometimes|nullable|integer',
+            'is_active' => 'sometimes|nullable|boolean',
+        ]);
+        $section->update($data);
         return response()->json(['success' => true, 'data' => $section]);
     }
 
-    public function deleteSection(int $id)
+    public function deleteSection($id)
     {
         FooterSection::findOrFail($id)->delete();
         return response()->json(['success' => true]);
     }
 
-    public function createLink(Request $request, int $sectionId)
+    public function createLink(Request $request, $sectionId)
     {
         FooterSection::findOrFail($sectionId);
         $data = $request->validate([
-            'label'           => 'required|string|max:80',
+            'label'           => 'required|string|max:100',
             'url'             => 'required|string|max:255',
-            'open_in_new_tab' => 'sometimes|boolean',
-            'position'        => 'sometimes|integer',
-            'is_active'       => 'sometimes|boolean',
+            'open_in_new_tab' => 'nullable|boolean',
+            'position'        => 'nullable|integer',
+            'is_active'       => 'nullable|boolean',
         ]);
-        $data['footer_section_id'] = $sectionId;
-        return response()->json(['success' => true, 'data' => FooterLink::create($data)], 201);
+        $link = FooterLink::create(['footer_section_id' => $sectionId] + $data);
+        return response()->json(['success' => true, 'data' => $link], 201);
     }
 
-    public function updateLink(Request $request, int $linkId)
+    public function updateLink(Request $request, $linkId)
     {
         $link = FooterLink::findOrFail($linkId);
-        $link->update($request->validate([
-            'label'           => 'sometimes|string|max:80',
-            'url'             => 'sometimes|string|max:255',
-            'open_in_new_tab' => 'sometimes|boolean',
-            'position'        => 'sometimes|integer',
-            'is_active'       => 'sometimes|boolean',
-        ]));
+        $data = $request->validate([
+            'label'           => 'sometimes|nullable|string|max:100',
+            'url'             => 'sometimes|nullable|string|max:255',
+            'open_in_new_tab' => 'sometimes|nullable|boolean',
+            'position'        => 'sometimes|nullable|integer',
+            'is_active'       => 'sometimes|nullable|boolean',
+        ]);
+        $link->update($data);
         return response()->json(['success' => true, 'data' => $link]);
     }
 
-    public function deleteLink(int $linkId)
+    public function deleteLink($linkId)
     {
         FooterLink::findOrFail($linkId)->delete();
         return response()->json(['success' => true]);

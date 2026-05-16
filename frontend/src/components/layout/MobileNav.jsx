@@ -6,6 +6,7 @@ import { useUiStore } from '../../stores/uiStore';
 import { useAuthStore } from '../../stores/authStore';
 import { useQuery } from '@tanstack/react-query';
 import { categoriesApi } from '../../api/categories';
+import { configApi } from '../../api/config';
 
 export default function MobileNav() {
   const { mobileMenuOpen, closeMobileMenu } = useUiStore();
@@ -16,6 +17,13 @@ export default function MobileNav() {
     queryKey: ['categories'],
     queryFn: () => categoriesApi.getAll().then(r => r.data.data),
   });
+
+  const { data: siteConfig } = useQuery({
+    queryKey: ['public-config'],
+    queryFn: () => configApi.get().then(r => r.data.data),
+    staleTime: 5 * 60 * 1000,
+  });
+  const appName = siteConfig?.['app.name'] || 'Myeon Casuals';
 
   const toggleCat = (id) => setOpenCats(s => ({ ...s, [id]: !s[id] }));
 
@@ -31,7 +39,7 @@ export default function MobileNav() {
             className="fixed left-0 top-0 h-full w-72 bg-white z-50 flex flex-col overflow-y-auto"
           >
             <div className="flex items-center justify-between p-5 bg-brand-primary text-white">
-              <h2 className="font-heading text-xl font-bold">Myeon Casuals</h2>
+              <h2 className="font-heading text-xl font-bold">{appName}</h2>
               <button onClick={closeMobileMenu}><X size={22}/></button>
             </div>
 

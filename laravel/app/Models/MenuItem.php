@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class MenuItem extends Model
 {
     protected $fillable = ['label', 'url', 'parent_id', 'location', 'target', 'position', 'is_active'];
-
-    protected $casts = ['is_active' => 'boolean'];
+    protected $casts    = ['is_active' => 'boolean', 'position' => 'integer'];
 
     public function children()
     {

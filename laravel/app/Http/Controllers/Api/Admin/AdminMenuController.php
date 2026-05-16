@@ -11,8 +11,8 @@ class AdminMenuController extends Controller
     {
         $location = $request->get('location', 'header');
         $items = MenuItem::where('location', $location)
-            ->with('children')
             ->whereNull('parent_id')
+            ->with(['children' => fn($q) => $q->orderBy('position')])
             ->orderBy('position')
             ->get();
         return response()->json(['success' => true, 'data' => $items]);
@@ -21,42 +21,43 @@ class AdminMenuController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'label'     => 'required|string|max:80',
+            'label'     => 'required|string|max:100',
             'url'       => 'required|string|max:255',
             'parent_id' => 'nullable|exists:menu_items,id',
-            'location'  => 'sometimes|in:header,footer',
-            'target'    => 'sometimes|in:_self,_blank',
-            'position'  => 'sometimes|integer',
-            'is_active' => 'sometimes|boolean',
+            'location'  => 'required|in:header,footer',
+            'target'    => 'required|in:_self,_blank',
+            'position'  => 'nullable|integer',
+            'is_active' => 'nullable|boolean',
         ]);
-        return response()->json(['success' => true, 'data' => MenuItem::create($data)], 201);
+        $item = MenuItem::create($data);
+        return response()->json(['success' => true, 'data' => $item], 201);
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, $id)
     {
         $item = MenuItem::findOrFail($id);
         $data = $request->validate([
-            'label'     => 'sometimes|string|max:80',
-            'url'       => 'sometimes|string|max:255',
+            'label'     => 'sometimes|nullable|string|max:100',
+            'url'       => 'sometimes|nullable|string|max:255',
             'parent_id' => 'nullable|exists:menu_items,id',
-            'location'  => 'sometimes|in:header,footer',
-            'target'    => 'sometimes|in:_self,_blank',
-            'position'  => 'sometimes|integer',
-            'is_active' => 'sometimes|boolean',
+            'location'  => 'sometimes|nullable|in:header,footer',
+            'target'    => 'sometimes|nullable|in:_self,_blank',
+            'position'  => 'sometimes|nullable|integer',
+            'is_active' => 'sometimes|nullable|boolean',
         ]);
         $item->update($data);
         return response()->json(['success' => true, 'data' => $item]);
     }
 
-    public function destroy(int $id)
+    public function destroy($id)
     {
         MenuItem::findOrFail($id)->delete();
-        return response()->json(['success' => true, 'message' => 'Menu item deleted']);
+        return response()->json(['success' => true]);
     }
 
     public function reorder(Request $request)
     {
-        foreach ($request->validate(['items' => 'required|array'])['items'] as $item) {
+        foreach ((array) $request->items as $item) {
             MenuItem::where('id', $item['id'])->update(['position' => $item['position']]);
         }
         return response()->json(['success' => true]);

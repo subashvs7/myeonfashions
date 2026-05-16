@@ -58,6 +58,8 @@ Route::get('/search',             [SearchController::class, 'search']);
 Route::get('/search/suggestions', [SearchController::class, 'suggestions']);
 Route::get('/banners',            [BannerController::class, 'index']);
 Route::get('/config',             [App\Http\Controllers\Api\PublicConfigController::class, 'index']);
+Route::get('/menu-items',         [App\Http\Controllers\Api\Admin\AdminMenuController::class, 'index']);
+Route::get('/footer-sections',    [App\Http\Controllers\Api\Admin\AdminFooterController::class, 'sections']);
 
 Route::post('/payment/webhook',        [PaymentController::class, 'webhook']);
 Route::post('/cart/guest',             [CartController::class, 'guestCart']);

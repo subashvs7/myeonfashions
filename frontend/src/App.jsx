@@ -19,6 +19,14 @@ const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
 const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
+// Help / info pages
+const ContactPage   = lazy(() => import('./pages/ContactPage'));
+const PrivacyPage   = lazy(() => import('./pages/PrivacyPage'));
+const TermsPage     = lazy(() => import('./pages/TermsPage'));
+const FAQPage       = lazy(() => import('./pages/FAQPage'));
+const SizeGuidePage = lazy(() => import('./pages/SizeGuidePage'));
+const ReturnsPage   = lazy(() => import('./pages/ReturnsPage'));
+
 // Auth pages
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
@@ -90,6 +98,14 @@ export default function App() {
             <Route path="search" element={<SearchResults />} />
             <Route path="checkout" element={<CheckoutPage />} />
             <Route path="order-success/:id" element={<OrderSuccess />} />
+
+            {/* Help / info pages */}
+            <Route path="contact"    element={<ContactPage />} />
+            <Route path="privacy"    element={<PrivacyPage />} />
+            <Route path="terms"      element={<TermsPage />} />
+            <Route path="faq"        element={<FAQPage />} />
+            <Route path="size-guide" element={<SizeGuidePage />} />
+            <Route path="returns"    element={<ReturnsPage />} />
 
             {/* Auth */}
             <Route path="login" element={<LoginPage />} />

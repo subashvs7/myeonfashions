@@ -1,18 +1,48 @@
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { configApi } from '../../api/config';
+import { configApi, footerApi } from '../../api/config';
+
+const DEFAULT_SECTIONS = [
+  {
+    id: '__quick',
+    title: 'Quick Links',
+    links: [
+      { id: 1, label: 'Sarees',       url: '/categories/sarees',   is_active: true },
+      { id: 2, label: 'Kurtas',       url: '/categories/kurtas',   is_active: true },
+      { id: 3, label: 'Lehengas',     url: '/categories/lehengas', is_active: true },
+      { id: 4, label: 'New Arrivals', url: '/new-arrivals',        is_active: true },
+      { id: 5, label: 'Sale',         url: '/sale',                is_active: true },
+    ],
+  },
+  {
+    id: '__help',
+    title: 'Help',
+    links: [
+      { id: 6,  label: 'Track Order',          url: '/account/orders', is_active: true },
+      { id: 7,  label: 'Returns & Exchanges',  url: '/returns',        is_active: true },
+      { id: 8,  label: 'Size Guide',           url: '/size-guide',     is_active: true },
+      { id: 9,  label: 'FAQ',                  url: '/faq',            is_active: true },
+      { id: 10, label: 'Contact Us',           url: '/contact',        is_active: true },
+    ],
+  },
+];
 
 export default function Footer() {
-  const { data } = useQuery({
+  const { data: cfg = {} } = useQuery({
     queryKey: ['public-config'],
-    queryFn: configApi.get,
+    queryFn: () => configApi.get().then(r => r.data.data),
     staleTime: 5 * 60 * 1000,
   });
 
-  const cfg = data?.data?.data ?? {};
+  const { data: rawSections = [] } = useQuery({
+    queryKey: ['footer-sections-public'],
+    queryFn: () => footerApi.getSections().then(r => r.data.data ?? []),
+    staleTime: 5 * 60 * 1000,
+  });
 
   const storeName = cfg['app.name'] || 'Myeon Casuals';
+  const tagline   = cfg['app.tagline'] || 'Style That Speaks. Premium Indian ethnic wear crafted for the modern woman.';
   const address   = cfg['store.address'] || null;
   const phone     = cfg['store.phone'] || null;
   const email     = cfg['store.email'] || null;
@@ -26,18 +56,20 @@ export default function Footer() {
     { label: 'TW', href: twitter },
   ].filter(s => s.href);
 
+  // Use admin-managed sections if any exist, otherwise fall back to defaults
+  const activeSections = rawSections.filter(s => s.is_active);
+  const sections = activeSections.length > 0 ? activeSections : DEFAULT_SECTIONS;
+
   return (
     <footer className="bg-brand-primary text-white mt-16">
       <div className="page-container py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="space-y-4">
             <h3 className="font-heading text-3xl font-bold">
               {storeName} <span className="text-brand-accent">Fashion</span>
             </h3>
-            <p className="text-sm text-gray-300 leading-relaxed">
-              Style That Speaks. Premium Indian ethnic wear crafted for the modern woman.
-            </p>
+            <p className="text-sm text-gray-300 leading-relaxed">{tagline}</p>
             {socials.length > 0 && (
               <div className="flex gap-4">
                 {socials.map(s => (
@@ -51,41 +83,24 @@ export default function Footer() {
             )}
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="font-medium uppercase tracking-wider mb-6 text-brand-accent">Quick Links</h4>
-            <ul className="space-y-3 text-sm text-gray-300">
-              {[
-                { to: '/categories/sarees',   label: 'Sarees' },
-                { to: '/categories/kurtas',   label: 'Kurtas' },
-                { to: '/categories/lehengas', label: 'Lehengas' },
-                { to: '/new-arrivals',        label: 'New Arrivals' },
-                { to: '/sale',                label: 'Sale' },
-              ].map(item => (
-                <li key={item.to}>
-                  <Link to={item.to} className="hover:text-brand-accent transition-colors">{item.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Help */}
-          <div>
-            <h4 className="font-medium uppercase tracking-wider mb-6 text-brand-accent">Help</h4>
-            <ul className="space-y-3 text-sm text-gray-300">
-              {[
-                { to: '/account/orders', label: 'Track Order' },
-                { to: '/returns',        label: 'Returns & Exchanges' },
-                { to: '/size-guide',     label: 'Size Guide' },
-                { to: '/faq',            label: 'FAQ' },
-                { to: '/contact',        label: 'Contact Us' },
-              ].map(item => (
-                <li key={item.to}>
-                  <Link to={item.to} className="hover:text-brand-accent transition-colors">{item.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Dynamic sections (max 2 shown in middle columns) */}
+          {sections.slice(0, 2).map(section => (
+            <div key={section.id}>
+              <h4 className="font-medium uppercase tracking-wider mb-6 text-brand-accent">{section.title}</h4>
+              <ul className="space-y-3 text-sm text-gray-300">
+                {section.links.filter(l => l.is_active !== false).map(link => (
+                  <li key={link.id}>
+                    {link.open_in_new_tab ? (
+                      <a href={link.url} target="_blank" rel="noreferrer"
+                        className="hover:text-brand-accent transition-colors">{link.label}</a>
+                    ) : (
+                      <Link to={link.url} className="hover:text-brand-accent transition-colors">{link.label}</Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
           {/* Contact */}
           <div>

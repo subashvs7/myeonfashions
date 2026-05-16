@@ -144,8 +144,18 @@ export default function Header() {
             <button className="md:hidden p-2" onClick={openMobileMenu}><Menu size={22}/></button>
 
             {/* Logo */}
-            <Link to="/" className="font-heading text-2xl md:text-3xl font-bold text-brand-primary tracking-tight">
-              Myeon Casuals <span className="text-brand-accent">Fashion</span>
+            <Link to="/" className="flex items-center">
+              {configData?.['app.logo'] ? (
+                <img
+                  src={`${(import.meta.env.VITE_API_URL || 'http://localhost:8000/api').replace('/api', '')}/storage/${configData['app.logo']}`}
+                  alt={configData?.['app.name'] || 'Myeon Casuals'}
+                  className="h-10 md:h-12 object-contain"
+                />
+              ) : (
+                <span className="font-heading text-2xl md:text-3xl font-bold text-brand-primary tracking-tight">
+                  {configData?.['app.name'] || 'Myeon Casuals'} <span className="text-brand-accent">Fashion</span>
+                </span>
+              )}
             </Link>
 
             {/* Desktop nav */}
