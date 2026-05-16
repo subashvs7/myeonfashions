@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background: brand primary dark purple with rounded corners -->
+  <rect width="512" height="512" rx="90" fill="#2D1B69"/>
+
+  <!-- Gold top accent bar -->
+  <rect x="72" y="72" width="368" height="7" rx="3.5" fill="#F59E0B"/>
+
+  <!-- Letter D — vertical stem -->
+  <rect x="112" y="108" width="60" height="296" rx="6" fill="#F59E0B"/>
+
+  <!-- Letter D — curved right body (filled D shape) -->
+  <path d="M 140 108
+           C 390 108 390 404 140 404 Z"
+        fill="#F59E0B"/>
+
+  <!-- Letter D — inner cutout to hollow the curve -->
+  <path d="M 172 150
+           C 348 150 348 362 172 362 Z"
+        fill="#2D1B69"/>
+
+  <!-- Gold bottom accent bar -->
+  <rect x="72" y="434" width="368" height="6" rx="3" fill="#F59E0B" opacity="0.55"/>
+
+  <!-- Small "FASHION" wordmark hint — three dots below D -->
+  <circle cx="200" cy="455" r="5" fill="#F59E0B" opacity="0.5"/>
+  <circle cx="256" cy="455" r="5" fill="#F59E0B" opacity="0.5"/>
+  <circle cx="312" cy="455" r="5" fill="#F59E0B" opacity="0.5"/>
+</svg>

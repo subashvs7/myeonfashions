@@ -1,0 +1,1100 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Hostinger Deployment Guide — Myeon Casuals</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#2D1B69;--accent:#F59E0B;--green:#10b981;--red:#ef4444;
+  --blue:#3b82f6;--text:#1a1a2e;--muted:#6b7280;--border:#e5e7eb;
+  --bg:#f8f7ff;--white:#fff;--code-bg:#1e1e2e;--code-text:#cdd6f4;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6;color:var(--text);background:var(--white)}
+@media print{
+  .no-print{display:none!important}
+  .page-break{page-break-before:always}
+  a{color:inherit;text-decoration:none}
+  .card{break-inside:avoid}
+}
+
+/* Cover */
+.cover{background:linear-gradient(135deg,var(--primary) 0%,#4c1d95 60%,#7c3aed 100%);color:white;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 40px;page-break-after:always}
+.cover-logo{font-size:44px;font-weight:900;letter-spacing:-1px;margin-bottom:4px}
+.cover-logo span{color:var(--accent)}
+.cover-domain{font-size:18px;font-weight:300;opacity:.7;margin-bottom:48px;letter-spacing:2px}
+.cover-title{font-size:38px;font-weight:700;line-height:1.2;margin-bottom:12px}
+.cover-sub{font-size:15px;opacity:.8;max-width:500px;margin-bottom:48px}
+.cover-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:48px}
+.pill{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:6px 16px;border-radius:20px;font-size:12px}
+.cover-meta{font-size:12px;opacity:.6;display:flex;gap:32px}
+
+/* Container */
+.wrap{max-width:900px;margin:0 auto;padding:40px 48px}
+
+/* Phase Banner */
+.phase{display:flex;align-items:center;gap:16px;background:var(--primary);color:white;padding:20px 32px;margin-bottom:0}
+.phase-num{font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:.6}
+.phase-title{font-size:24px;font-weight:700}
+.phase-desc{font-size:13px;opacity:.8;margin-top:2px}
+
+/* Section */
+.section{background:var(--white);border:1px solid var(--border);border-radius:8px;margin:20px 0;overflow:hidden}
+.section-head{background:var(--bg);padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.section-icon{width:32px;height:32px;background:var(--primary);color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.section-title{font-size:16px;font-weight:700;color:var(--primary)}
+.section-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.section-body{padding:20px}
+
+/* Steps */
+.steps{counter-reset:step}
+.step{display:flex;gap:14px;margin-bottom:18px;counter-increment:step}
+.step-num{flex-shrink:0;width:28px;height:28px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.step-num::before{content:counter(step)}
+.step-content{flex:1;padding-top:3px}
+.step-title{font-weight:700;font-size:14px;margin-bottom:3px}
+.step-desc{font-size:13px;color:#374151;line-height:1.6}
+.note{background:#fffbeb;border-left:3px solid var(--accent);padding:8px 12px;margin-top:8px;font-size:12px;color:#92400e;border-radius:0 4px 4px 0}
+.tip{background:#f0fdf4;border-left:3px solid var(--green);padding:8px 12px;margin-top:8px;font-size:12px;color:#065f46;border-radius:0 4px 4px 0}
+.warn{background:#fef2f2;border-left:3px solid var(--red);padding:8px 12px;margin-top:8px;font-size:12px;color:#991b1b;border-radius:0 4px 4px 0}
+
+/* Code block */
+.code{background:var(--code-bg);color:var(--code-text);padding:14px 18px;border-radius:6px;font-family:'Courier New',monospace;font-size:12px;margin:10px 0;overflow-x:auto;line-height:1.8}
+.code .comment{color:#6272a4}
+.code .cmd{color:#50fa7b}
+.code .val{color:#f1fa8c}
+.code .path{color:#8be9fd}
+.code .kw{color:#ff79c6}
+.inline-code{font-family:monospace;font-size:12px;background:var(--bg);border:1px solid var(--border);padding:1px 5px;border-radius:3px;color:#6d28d9}
+
+/* File tree */
+.tree{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:20px;font-family:'Courier New',monospace;font-size:12px;line-height:2;margin:12px 0}
+.tree .green{color:#4ade80}
+.tree .blue{color:#60a5fa}
+.tree .yellow{color:#fbbf24}
+.tree .muted{color:#64748b}
+.tree .red{color:#f87171}
+
+/* Tables */
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+.tbl th{background:var(--bg);padding:8px 12px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:2px solid var(--border)}
+.tbl td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.fname{font-weight:700;color:var(--primary)}
+
+/* Badges */
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.bg{background:#d1fae5;color:#065f46}
+.br{background:#fee2e2;color:#991b1b}
+.by{background:#fef3c7;color:#92400e}
+.bb{background:#dbeafe;color:#1e40af}
+.bp{background:#ede9fe;color:#5b21b6}
+
+/* Grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:12px 0}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px}
+.card-title{font-weight:700;font-size:13px;color:var(--primary);margin-bottom:5px}
+.card-body{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* Alert / info box */
+.alert{border-radius:8px;padding:14px 18px;margin:14px 0;font-size:13px}
+.alert-blue{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.alert-green{background:#f0fdf4;border:1px solid #bbf7d0;color:#065f46}
+.alert-yellow{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+.alert-red{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.alert strong{display:block;margin-bottom:4px}
+
+/* Checklist */
+.cl{list-style:none}
+.cl li{padding:5px 0;font-size:13px;display:flex;align-items:flex-start;gap:8px;border-bottom:1px solid var(--border)}
+.cl li:last-child{border-bottom:none}
+.cl li::before{content:'☐';color:var(--muted);flex-shrink:0;font-size:16px;margin-top:-1px}
+.cl li.done::before{content:'✓';color:var(--green);font-weight:700}
+
+/* Misc */
+hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+h3{font-size:17px;color:var(--primary);margin:24px 0 12px;border-left:4px solid var(--accent);padding-left:10px}
+h4{font-size:14px;font-weight:700;margin:16px 0 8px}
+p{font-size:13px;margin-bottom:10px;line-height:1.6}
+
+/* Number callout */
+.num-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:var(--accent);color:white;border-radius:50%;font-size:11px;font-weight:700;margin-right:6px;flex-shrink:0}
+
+/* Flow */
+.flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:14px 0;font-size:12px}
+.fb{background:var(--primary);color:white;padding:7px 14px;border-radius:4px;font-weight:600;font-size:12px;text-align:center}
+.fb.g{background:var(--green)}.fb.b{background:var(--blue)}.fb.a{background:var(--accent)}
+.fa{padding:0 8px;color:var(--muted);font-size:16px}
+
+.no-print button{position:fixed;bottom:24px;right:24px;background:var(--primary);color:white;border:none;padding:12px 22px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+</style>
+</head>
+<body>
+
+<!-- ═══ COVER ═══ -->
+<div class="cover">
+  <div class="cover-logo">Myeon Casuals <span>Fashion</span></div>
+  <div class="cover-domain">myeoncasuals.com</div>
+  <div class="cover-title">Hostinger Deployment<br>Step-by-Step Guide</div>
+  <div class="cover-sub">Complete guide to deploying the Laravel + React e-commerce platform on Hostinger shared hosting</div>
+  <div class="cover-pills">
+    <span class="pill">Laravel 12</span>
+    <span class="pill">React 19 + Vite</span>
+    <span class="pill">MySQL</span>
+    <span class="pill">Hostinger hPanel</span>
+    <span class="pill">cPanel SSH</span>
+    <span class="pill">PWA</span>
+  </div>
+  <div class="cover-meta">
+    <span>May 2026</span><span>Shared Hosting</span><span>Internal Reference</span>
+  </div>
+</div>
+
+<!-- ═══ OVERVIEW ═══ -->
+<div class="page-break"></div>
+<div class="wrap">
+
+  <h3 style="border:none;padding:0;font-size:22px;margin-bottom:8px;">Deployment Overview</h3>
+  <p style="font-size:15px;color:var(--muted);margin-bottom:20px;">This guide walks you through every step from local machine to live at <strong>myeoncasuals.com</strong></p>
+
+  <!-- Phase map -->
+  <div class="flow" style="flex-wrap:wrap;gap:4px;">
+    <div class="fb a" style="font-size:11px;">Phase 1<br>Hostinger Setup</div><div class="fa">→</div>
+    <div class="fb" style="font-size:11px;">Phase 2<br>Build Frontend</div><div class="fa">→</div>
+    <div class="fb" style="font-size:11px;">Phase 3<br>Upload Files</div><div class="fa">→</div>
+    <div class="fb b" style="font-size:11px;">Phase 4<br>Database</div><div class="fa">→</div>
+    <div class="fb" style="font-size:11px;">Phase 5<br>SSH Setup</div><div class="fa">→</div>
+    <div class="fb g" style="font-size:11px;">Phase 6<br>Go Live ✓</div>
+  </div>
+
+  <!-- File structure diagram -->
+  <h3>How Files Are Organized on Hostinger</h3>
+  <p>Hostinger gives you a home directory. <strong>Only</strong> <span class="inline-code">public_html/</span> is accessible from the browser. The Laravel app lives <em>outside</em> it for security.</p>
+
+  <div class="tree">
+<span class="muted"># Hostinger Server Structure</span>
+/home/u123456789/                  <span class="muted"># Your Hostinger home folder</span>
+<span class="green">├── laravel/</span>                       <span class="muted"># ← Laravel app (PRIVATE - not browser-accessible)</span>
+│   ├── app/
+│   ├── bootstrap/
+│   ├── config/
+│   ├── database/
+│   ├── routes/
+│   ├── storage/
+│   │   └── app/public/            <span class="muted"># uploaded images live here</span>
+│   ├── vendor/
+│   ├── .env                       <span class="muted"># ← your production environment config</span>
+│   └── artisan
+│
+<span class="blue">└── public_html/</span>                   <span class="muted"># ← myeoncasuals.com web root (PUBLIC)</span>
+    ├── index.php                  <span class="muted"># ← from deploy/index.php</span>
+    ├── index.html                 <span class="muted"># ← React SPA (from laravel/public/)</span>
+    ├── assets/                    <span class="muted"># ← Vite-built JS & CSS</span>
+    ├── .htaccess                  <span class="muted"># ← from deploy/public_html.htaccess</span>
+    ├── <span class="yellow">storage/</span>                   <span class="muted"># ← SYMLINK → ../laravel/storage/app/public</span>
+    ├── sw.js                      <span class="muted"># service worker (PWA)</span>
+    ├── manifest.webmanifest
+    └── favicon files...
+  </div>
+
+  <div class="alert alert-yellow">
+    <strong>⚠️ Why this structure?</strong>
+    Putting Laravel files inside <span class="inline-code">public_html/</span> exposes your <span class="inline-code">.env</span> (database passwords, API keys) to the internet. Keeping Laravel one level up protects all sensitive files.
+  </div>
+
+</div>
+
+<!-- ═══ PHASE 1 ═══ -->
+<div class="page-break"></div>
+<div class="phase">
+  <div>
+    <div class="phase-num">Phase 1</div>
+    <div class="phase-title">Hostinger Account Setup</div>
+    <div class="phase-desc">Configure PHP version, create database, and get SSH access</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">🐘</div>
+      <div>
+        <div class="section-title">Step 1 — Set PHP Version to 8.2</div>
+        <div class="section-sub">Laravel 12 requires PHP 8.2 or higher</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Log in to Hostinger hPanel</div>
+            <div class="step-desc">Go to <strong>hpanel.hostinger.com</strong> → log in with your account</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Open Hosting → Manage</div>
+            <div class="step-desc">Click on your hosting plan → click <strong>Manage</strong> button next to <strong>myeoncasuals.com</strong></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Find PHP Configuration</div>
+            <div class="step-desc">In hPanel, go to <strong>Advanced → PHP Configuration</strong> (or search "PHP" in the search bar)</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Select PHP 8.2 or 8.3</div>
+            <div class="step-desc">From the dropdown, choose <strong>PHP 8.2</strong> or <strong>8.3</strong>. Click Save.</div>
+            <div class="tip">✓ Also verify these PHP extensions are enabled: BCMath, Ctype, Fileinfo, JSON, Mbstring, OpenSSL, PDO, PDO_MySQL, Tokenizer, XML, GD, ZIP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">🗄️</div>
+      <div>
+        <div class="section-title">Step 2 — Create MySQL Database</div>
+        <div class="section-sub">hPanel → Databases → MySQL Databases</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Go to Databases Section</div>
+            <div class="step-desc">In hPanel, find <strong>Databases → MySQL Databases</strong></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Create a New Database</div>
+            <div class="step-desc">Enter a database name (e.g., <strong>Myeon Casuals</strong>) → click Create. Hostinger will prefix it with your account username automatically.</div>
+            <div class="note">📋 Write down the full database name shown (e.g., <strong>u123456789_Myeon Casuals</strong>)</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Create a Database User</div>
+            <div class="step-desc">In the same section, create a new user (e.g., <strong>Myeon Casuals_user</strong>) with a strong password.</div>
+            <div class="note">📋 Write down: <strong>username</strong> (with prefix) and <strong>password</strong></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Assign User to Database</div>
+            <div class="step-desc">In "Add User to Database" section, select your user and database → grant <strong>All Privileges</strong> → Save</div>
+          </div>
+        </div>
+      </div>
+      <div class="alert alert-blue">
+        <strong>📋 Note these down — needed for .env file:</strong>
+        DB_DATABASE = u123456789_Myeon Casuals &nbsp;|&nbsp; DB_USERNAME = u123456789_Myeon Casuals_user &nbsp;|&nbsp; DB_PASSWORD = (your password)
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">🔑</div>
+      <div>
+        <div class="section-title">Step 3 — Enable SSH Access</div>
+        <div class="section-sub">Required to run artisan commands and create storage symlink</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Go to Advanced → SSH Access</div>
+            <div class="step-desc">In hPanel, search for <strong>SSH Access</strong>. Toggle it ON.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Note Your SSH Credentials</div>
+            <div class="step-desc">hPanel will show you:
+              <ul style="margin-top:6px;padding-left:16px;font-size:13px;">
+                <li><strong>Host:</strong> (your server IP or hostname)</li>
+                <li><strong>Port:</strong> 22 (or 65002 for some plans)</li>
+                <li><strong>Username:</strong> your hPanel username (u123456789)</li>
+                <li><strong>Password:</strong> your hPanel password</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Test SSH Connection</div>
+            <div class="step-desc">Open <strong>Command Prompt / Terminal</strong> on your PC and test:</div>
+            <div class="code"><span class="cmd">ssh</span> u123456789@your-server-hostname <span class="comment"># replace with your credentials</span></div>
+            <div class="tip">On Windows: Use PowerShell, Windows Terminal, or download PuTTY from putty.org</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">📧</div>
+      <div>
+        <div class="section-title">Step 4 — Create Email Account (for order notifications)</div>
+        <div class="section-sub">hPanel → Emails → Email Accounts</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Create noreply@myeoncasuals.com</div>
+            <div class="step-desc">Go to <strong>Emails → Email Accounts</strong> → Create account <strong>noreply@myeoncasuals.com</strong> with a password.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Note SMTP Settings</div>
+            <div class="step-desc">Hostinger email SMTP settings (used in .env):
+              <div class="code">MAIL_HOST=smtp.hostinger.com
+MAIL_PORT=587
+MAIL_USERNAME=noreply@myeoncasuals.com
+MAIL_PASSWORD=<span class="val">your-email-password</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ PHASE 2 ═══ -->
+<div class="page-break"></div>
+<div class="phase">
+  <div>
+    <div class="phase-num">Phase 2</div>
+    <div class="phase-title">Build the Frontend (on your PC)</div>
+    <div class="phase-desc">Compile the React app and prepare all files for upload</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">⚙️</div>
+      <div>
+        <div class="section-title">Build React App for Production</div>
+        <div class="section-sub">Run these commands on your local PC (not on Hostinger)</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Open Terminal in the frontend folder</div>
+            <div class="step-desc">Open PowerShell or CMD and navigate to your project:</div>
+            <div class="code">cd C:\laragon\www\last-ecom\frontend</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Run Production Build</div>
+            <div class="step-desc">This compiles and minifies all React/JS/CSS into <span class="inline-code">laravel/public/</span></div>
+            <div class="code">npm run build</div>
+            <div class="tip">✓ Build output goes to <strong>laravel/public/</strong> — the assets/, index.html, sw.js, and icons are created there</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Verify Build Output</div>
+            <div class="step-desc">Check that these files now exist in <span class="inline-code">laravel/public/</span>:</div>
+            <div class="code">C:\laragon\www\last-ecom\laravel\public\
+  <span class="green">✓</span> index.html
+  <span class="green">✓</span> index.php
+  <span class="green">✓</span> .htaccess
+  <span class="green">✓</span> assets\          <span class="comment"># JS and CSS files with hash names</span>
+  <span class="green">✓</span> sw.js
+  <span class="green">✓</span> manifest.webmanifest
+  <span class="green">✓</span> storage\         <span class="comment"># symlink (local only)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">📝</div>
+      <div>
+        <div class="section-title">Prepare the Production .env File</div>
+        <div class="section-sub">Fill in your Hostinger database and email credentials</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Open deploy/env.production</div>
+            <div class="step-desc">File location: <span class="inline-code">C:\laragon\www\last-ecom\deploy\env.production</span>
+            <br>Open it in Notepad or VS Code.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Fill in ALL the FILL fields</div>
+            <div class="code"><span class="comment"># Generate APP_KEY — run this in your local terminal:</span>
+<span class="cmd">php artisan key:generate --show</span>
+<span class="comment"># Copy the output (base64:xxxx...) into APP_KEY=</span>
+
+APP_KEY=<span class="val">base64:your-generated-key-here</span>
+
+DB_DATABASE=<span class="val">u123456789_Myeon Casuals</span>   <span class="comment"># from Hostinger step 2</span>
+DB_USERNAME=<span class="val">u123456789_Myeon Casuals_user</span>
+DB_PASSWORD=<span class="val">your_strong_db_password</span>
+
+RAZORPAY_KEY=<span class="val">rzp_live_your_key</span>        <span class="comment"># from razorpay.com dashboard</span>
+RAZORPAY_SECRET=<span class="val">your_razorpay_secret</span>
+
+MAIL_PASSWORD=<span class="val">your_email_password</span></div>
+            <div class="warn">⚠️ Use LIVE Razorpay keys (rzp_live_...) for production, NOT test keys</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Save as .env (no extension)</div>
+            <div class="step-desc">Save the file. This file will be uploaded to <span class="inline-code">~/laravel/.env</span> on Hostinger (not public_html).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ PHASE 3 ═══ -->
+<div class="page-break"></div>
+<div class="phase">
+  <div>
+    <div class="phase-num">Phase 3</div>
+    <div class="phase-title">Upload Files to Hostinger</div>
+    <div class="phase-desc">Upload via File Manager or FTP — two separate upload operations</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="alert alert-blue">
+    <strong>📦 Two Uploads Required:</strong>
+    <ol style="margin-top:6px;padding-left:16px;font-size:13px;line-height:2;">
+      <li>Upload <strong>Laravel app files</strong> → into <span class="inline-code">~/laravel/</span> (above public_html)</li>
+      <li>Upload <strong>Public files</strong> (React build + entry point) → into <span class="inline-code">~/public_html/</span></li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">📂</div>
+      <div>
+        <div class="section-title">Upload 1 — Laravel App Files</div>
+        <div class="section-sub">Goes to ~/laravel/ — NOT inside public_html</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Go to Hostinger File Manager</div>
+            <div class="step-desc">hPanel → Files → File Manager. You'll see your home directory with <span class="inline-code">public_html/</span> folder.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Create a "laravel" folder</div>
+            <div class="step-desc">In the home directory (NOT inside public_html), create a new folder named <strong>laravel</strong></div>
+            <div class="note">📌 Final path: <span class="inline-code">/home/u123456789/laravel/</span> — at the same level as public_html, not inside it</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Zip the Laravel project on your PC</div>
+            <div class="step-desc">On your PC, zip the entire <span class="inline-code">laravel/</span> folder EXCLUDING <span class="inline-code">laravel/public/</span>, <span class="inline-code">laravel/node_modules/</span> (if any).</div>
+            <div class="code"><span class="comment"># In PowerShell (excludes public/ folder):</span>
+cd C:\laragon\www\last-ecom
+Compress-Archive -Path laravel\* -DestinationPath laravel_deploy.zip `
+  -CompressionLevel Optimal
+<span class="comment"># Note: upload the zip, then delete laravel/public from server</span></div>
+            <div class="tip">💡 Alternatively, use FTP software like FileZilla — it's easier for large uploads. See FTP section below.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Upload and Extract in File Manager</div>
+            <div class="step-desc">In File Manager, open the <span class="inline-code">laravel/</span> folder you created. Upload the zip → right-click → Extract.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Upload the .env file</div>
+            <div class="step-desc">Upload your filled <span class="inline-code">deploy/env.production</span> to <span class="inline-code">~/laravel/</span> and rename it to <strong>.env</strong> (with the dot, no extension).</div>
+            <div class="warn">⚠️ The .env file must be inside <span class="inline-code">laravel/</span> — NOT in public_html. It contains your database passwords.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-yellow" style="margin-top:16px;">
+        <strong>📋 What to upload to ~/laravel/ — checklist:</strong>
+        <ul class="cl" style="margin-top:8px;">
+          <li>app/ folder</li>
+          <li>bootstrap/ folder</li>
+          <li>config/ folder</li>
+          <li>database/ folder</li>
+          <li>resources/ folder</li>
+          <li>routes/ folder</li>
+          <li>storage/ folder (with empty .gitignore files preserved)</li>
+          <li>vendor/ folder (large — ~50MB, all Composer packages)</li>
+          <li>artisan file</li>
+          <li>composer.json and composer.lock</li>
+          <li>.env (renamed from deploy/env.production)</li>
+        </ul>
+        <strong style="margin-top:8px;display:block;color:#991b1b;">❌ Do NOT upload: laravel/public/ — this goes to public_html instead</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">🌐</div>
+      <div>
+        <div class="section-title">Upload 2 — Public Files (React Build)</div>
+        <div class="section-sub">Goes to ~/public_html/ — this is what browsers access</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Open public_html in File Manager</div>
+            <div class="step-desc">Navigate to <span class="inline-code">public_html/</span> folder. You'll see the default Hostinger placeholder page — delete it.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Upload contents of laravel/public/</div>
+            <div class="step-desc">From your PC, upload everything inside <span class="inline-code">C:\laragon\www\last-ecom\laravel\public\</span> — but <strong>replace</strong> the two files below:</div>
+            <div class="alert alert-yellow" style="margin-top:8px;">
+              <strong>⚠️ Replace these 2 files with the deploy/ versions:</strong>
+              <ul style="margin-top:6px;padding-left:16px;font-size:12px;line-height:2;">
+                <li>Upload <span class="inline-code">deploy/index.php</span> → rename to <span class="inline-code">index.php</span> in public_html (replaces the Laravel one)</li>
+                <li>Upload <span class="inline-code">deploy/public_html.htaccess</span> → rename to <span class="inline-code">.htaccess</span> in public_html</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-green" style="margin-top:16px;">
+        <strong>📋 What should be in ~/public_html/ after upload:</strong>
+        <ul class="cl" style="margin-top:8px;">
+          <li>index.php (from deploy/index.php — NOT the Laravel version)</li>
+          <li>index.html (React SPA — from laravel/public/index.html)</li>
+          <li>.htaccess (from deploy/public_html.htaccess)</li>
+          <li>assets/ folder (Vite-built JS + CSS)</li>
+          <li>sw.js (PWA service worker)</li>
+          <li>manifest.webmanifest</li>
+          <li>registerSW.js</li>
+          <li>favicon files (pwa-64x64.png, apple-touch-icon-180x180.png, etc.)</li>
+        </ul>
+      </div>
+
+      <h4>Using FTP Instead (Recommended for large uploads)</h4>
+      <div class="code"><span class="comment"># FileZilla FTP Settings:</span>
+Host:     <span class="val">your-server-hostname</span>      <span class="comment"># from hPanel → FTP Accounts</span>
+Username: <span class="val">your-ftp-username</span>
+Password: <span class="val">your-ftp-password</span>
+Port:     <span class="val">21</span>
+
+<span class="comment"># Create FTP account: hPanel → Files → FTP Accounts</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ PHASE 4 ═══ -->
+<div class="page-break"></div>
+<div class="phase">
+  <div>
+    <div class="phase-num">Phase 4</div>
+    <div class="phase-title">Database Setup</div>
+    <div class="phase-desc">Import your local database or run fresh migrations</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">💾</div>
+      <div>
+        <div class="section-title">Option A — Export Local DB and Import to Hostinger (Recommended)</div>
+        <div class="section-sub">Brings all your existing data, products, and admin account to production</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Export from Laragon (local database)</div>
+            <div class="step-desc">Open <strong>HeidiSQL</strong> (comes with Laragon) → connect to local MySQL → right-click <strong>Myeon Casuals_fashion</strong> database → <strong>Export database as SQL</strong></div>
+            <div class="code"><span class="comment"># Or via command line:</span>
+<span class="cmd">mysqldump</span> -u root Myeon Casuals_fashion > Myeon Casuals_fashion.sql</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Import to Hostinger via phpMyAdmin</div>
+            <div class="step-desc">In hPanel → Databases → <strong>phpMyAdmin</strong> → select your database <strong>u123456789_Myeon Casuals</strong> → click <strong>Import</strong> tab → choose the SQL file → click <strong>Go</strong></div>
+            <div class="tip">✓ All tables, products, categories, admin accounts — everything from local will be live</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">🔄</div>
+      <div>
+        <div class="section-title">Option B — Fresh Migrations via SSH (Clean start)</div>
+        <div class="section-sub">Use if you want a fresh database with just the schema (no local data)</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Connect via SSH</div>
+            <div class="code"><span class="cmd">ssh</span> u123456789@your-server-hostname</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Navigate to Laravel folder and run migrations</div>
+            <div class="code"><span class="cmd">cd</span> ~/laravel
+<span class="cmd">php artisan migrate</span> --force
+<span class="comment"># Then create your admin user:</span>
+<span class="cmd">php artisan tinker</span>
+<span class="kw">>> </span>App\Models\User::create(['name'=>'Admin User','email'=>'admin@myeoncasuals.com','password'=>bcrypt('your_admin_password'),'role'=>'admin']);</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ PHASE 5 ═══ -->
+<div class="page-break"></div>
+<div class="phase">
+  <div>
+    <div class="phase-num">Phase 5</div>
+    <div class="phase-title">SSH Configuration & Final Setup</div>
+    <div class="phase-desc">Run the setup script to configure permissions, symlink, and caches</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">🔧</div>
+      <div>
+        <div class="section-title">Run All Setup Commands via SSH</div>
+        <div class="section-sub">One-time setup after uploading files</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <h4>Connect to SSH first:</h4>
+      <div class="code">ssh u123456789@your-server-hostname</div>
+
+      <h4 style="margin-top:16px;">Option A — Run the automated setup script</h4>
+      <div class="code"><span class="comment"># Upload deploy/hostinger-setup.sh to ~/  then run:</span>
+<span class="cmd">bash</span> ~/hostinger-setup.sh</div>
+
+      <h4 style="margin-top:16px;">Option B — Run commands one by one</h4>
+
+      <p><strong>1. Set Storage Permissions</strong></p>
+      <div class="code"><span class="cmd">chmod</span> -R 755 ~/laravel/storage
+<span class="cmd">chmod</span> -R 755 ~/laravel/bootstrap/cache</div>
+
+      <p><strong>2. Create Storage Symlink</strong> (so uploaded images are accessible from browser)</p>
+      <div class="code"><span class="comment"># Remove old symlink if exists</span>
+<span class="cmd">rm</span> -f ~/public_html/storage
+
+<span class="comment"># Create new symlink</span>
+<span class="cmd">ln</span> -s ~/laravel/storage/app/public ~/public_html/storage
+
+<span class="comment"># Verify it worked</span>
+<span class="cmd">ls</span> -la ~/public_html/storage
+<span class="comment"># Should show: storage -> /home/u123456789/laravel/storage/app/public</span></div>
+
+      <p><strong>3. Build Laravel Caches</strong> (makes the site faster)</p>
+      <div class="code"><span class="cmd">cd</span> ~/laravel
+
+php artisan config:cache    <span class="comment"># caches all config files</span>
+php artisan route:cache     <span class="comment"># caches route definitions</span>
+php artisan view:cache      <span class="comment"># caches blade views</span></div>
+
+      <p><strong>4. Verify Everything</strong></p>
+      <div class="code"><span class="comment"># Check that .env is correct</span>
+<span class="cmd">php</span> artisan about
+
+<span class="comment"># Test database connection</span>
+<span class="cmd">php</span> artisan db:show
+
+<span class="comment"># Check storage symlink</span>
+<span class="cmd">ls</span> -la ~/public_html/ | grep storage</div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">🔒</div>
+      <div>
+        <div class="section-title">Enable SSL (HTTPS) — Free on Hostinger</div>
+        <div class="section-sub">Required for online payments and PWA install</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Go to SSL in hPanel</div>
+            <div class="step-desc">hPanel → Security → <strong>SSL Certificates</strong> → find <strong>myeoncasuals.com</strong></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Install Free SSL (Let's Encrypt)</div>
+            <div class="step-desc">Click <strong>Install</strong> next to the free SSL option. Hostinger auto-renews it every 90 days.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Force HTTPS Redirect</div>
+            <div class="step-desc">In hPanel → Security → SSL → enable <strong>"Force HTTPS"</strong> toggle. This redirects all http:// traffic to https://</div>
+          </div>
+        </div>
+      </div>
+      <div class="warn">⚠️ Razorpay payments ONLY work on HTTPS. Make sure SSL is active before testing payments.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">🌍</div>
+      <div>
+        <div class="section-title">Point Domain to Hostinger</div>
+        <div class="section-sub">If myeoncasuals.com is registered elsewhere (GoDaddy, Namecheap, etc.)</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Get Hostinger Nameservers</div>
+            <div class="step-desc">In hPanel → Domains → your domain → you'll see the nameservers:<br>
+            <strong>ns1.dns-parking.com</strong> and <strong>ns2.dns-parking.com</strong> (or Hostinger's nameservers)</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Update Nameservers at Registrar</div>
+            <div class="step-desc">Log in to wherever you bought <strong>myeoncasuals.com</strong> → find DNS/Nameserver settings → replace with Hostinger's nameservers</div>
+            <div class="note">⏳ DNS changes take 2–24 hours to propagate worldwide. The site may not be immediately accessible.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Or — Add Domain in hPanel</div>
+            <div class="step-desc">If domain is already registered at Hostinger, go to hPanel → Domains → it should already be pointing to your hosting.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ PHASE 6 ═══ -->
+<div class="page-break"></div>
+<div class="phase" style="background:var(--green);">
+  <div>
+    <div class="phase-num">Phase 6</div>
+    <div class="phase-title">Go Live — Final Testing</div>
+    <div class="phase-desc">Verify every part of the site is working correctly</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">✅</div>
+      <div>
+        <div class="section-title">Pre-Launch Testing Checklist</div>
+        <div class="section-sub">Test each item after going live — check on mobile too</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="g2">
+        <div>
+          <h4>Frontend & Navigation</h4>
+          <ul class="cl">
+            <li>Homepage loads at https://myeoncasuals.com</li>
+            <li>Hero slider shows banner images</li>
+            <li>Navigation menu shows categories</li>
+            <li>Products page loads with images</li>
+            <li>Product detail page opens correctly</li>
+            <li>Search works and shows results</li>
+            <li>Site works on mobile (responsive)</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Auth & Account</h4>
+          <ul class="cl">
+            <li>Customer registration works</li>
+            <li>Customer login works</li>
+            <li>Admin login at /admin works</li>
+            <li>Admin dashboard loads with data</li>
+            <li>Profile page loads and saves</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Shopping Flow</h4>
+          <ul class="cl">
+            <li>Add to cart works</li>
+            <li>Cart page shows items</li>
+            <li>Coupon code applies correctly</li>
+            <li>Checkout address step works</li>
+            <li>COD order can be placed</li>
+            <li>Online payment (Razorpay) works</li>
+            <li>Order success page shows</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Admin Functions</h4>
+          <ul class="cl">
+            <li>New order appears in admin</li>
+            <li>Upload product image — shows in frontend</li>
+            <li>Upload banner — shows on homepage</li>
+            <li>Order status can be updated</li>
+            <li>Reports page loads with data</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">🔍</div>
+      <div>
+        <div class="section-title">Common Errors & Fixes</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <table class="tbl">
+        <tr><th>Problem</th><th>Likely Cause</th><th>Fix</th></tr>
+        <tr>
+          <td class="fname">500 Internal Server Error</td>
+          <td>Wrong .env, missing APP_KEY, or permissions</td>
+          <td>Check laravel/storage/logs/laravel.log for details. Verify APP_KEY is set. Run chmod 755 storage/</td>
+        </tr>
+        <tr>
+          <td class="fname">404 on page refresh</td>
+          <td>.htaccess not working</td>
+          <td>Make sure deploy/public_html.htaccess was uploaded as <strong>.htaccess</strong>. Check mod_rewrite is enabled in PHP config.</td>
+        </tr>
+        <tr>
+          <td class="fname">API calls fail (CORS error)</td>
+          <td>Wrong APP_URL in .env or SANCTUM config</td>
+          <td>Set APP_URL=https://myeoncasuals.com in .env. Run php artisan config:cache after changes.</td>
+        </tr>
+        <tr>
+          <td class="fname">Images not showing</td>
+          <td>Storage symlink missing</td>
+          <td>SSH: run <span class="inline-code">ln -s ~/laravel/storage/app/public ~/public_html/storage</span></td>
+        </tr>
+        <tr>
+          <td class="fname">Database connection failed</td>
+          <td>Wrong DB credentials in .env</td>
+          <td>Double-check DB_DATABASE, DB_USERNAME, DB_PASSWORD from Hostinger. DB_HOST must be <strong>localhost</strong></td>
+        </tr>
+        <tr>
+          <td class="fname">White screen / blank page</td>
+          <td>PHP version mismatch or missing extension</td>
+          <td>Set PHP to 8.2 in hPanel. Enable PDO_MySQL, Mbstring, OpenSSL extensions.</td>
+        </tr>
+        <tr>
+          <td class="fname">Razorpay payment fails</td>
+          <td>HTTP (not HTTPS) or wrong keys</td>
+          <td>Enable SSL and use rzp_live_ keys (not rzp_test_)</td>
+        </tr>
+        <tr>
+          <td class="fname">Admin login fails</td>
+          <td>Session cookie domain mismatch</td>
+          <td>Set SESSION_DOMAIN=myeoncasuals.com in .env. Clear config cache.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ QUICK REFERENCE ═══ -->
+<div class="page-break"></div>
+<div class="phase" style="background:#1e1e2e;">
+  <div>
+    <div class="phase-num">Quick Reference</div>
+    <div class="phase-title">SSH Commands Cheat Sheet</div>
+    <div class="phase-desc">Useful commands for managing your live site</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <h3>Everyday Maintenance Commands</h3>
+  <div class="code"><span class="comment"># ── Connect to server ──────────────────────────────</span>
+ssh u123456789@your-server-hostname
+
+<span class="comment"># ── Laravel commands (always run from ~/laravel/) ──</span>
+<span class="cmd">cd</span> ~/laravel
+
+<span class="comment"># Clear ALL caches (run after any .env or config change)</span>
+php artisan optimize:clear
+
+<span class="comment"># Rebuild caches (run after clearing)</span>
+php artisan optimize
+
+<span class="comment"># View error logs</span>
+<span class="cmd">tail</span> -50 ~/laravel/storage/logs/laravel.log
+
+<span class="comment"># Run database migrations (after code updates)</span>
+php artisan migrate --force
+
+<span class="comment"># Put site in maintenance mode (during updates)</span>
+php artisan down
+php artisan up
+
+<span class="comment"># Check PHP version on server</span>
+php -v
+
+<span class="comment"># Test database connection</span>
+php artisan db:show</div>
+
+  <h3>Deploying Updates (After Making Code Changes)</h3>
+  <div class="code"><span class="comment"># ── On your LOCAL PC ───────────────────────────────</span>
+
+<span class="comment"># 1. Rebuild the React frontend</span>
+<span class="cmd">cd</span> C:\laragon\www\last-ecom\frontend
+npm run build
+
+<span class="comment"># 2. Upload changed files to Hostinger:</span>
+<span class="comment">#    - Upload laravel/public/assets/ to public_html/assets/</span>
+<span class="comment">#    - Upload laravel/public/index.html to public_html/index.html</span>
+<span class="comment">#    - Upload changed Laravel files (app/, routes/, config/) to ~/laravel/</span>
+
+<span class="comment"># ── On HOSTINGER SERVER (via SSH) ──────────────────</span>
+<span class="cmd">cd</span> ~/laravel
+php artisan migrate --force     <span class="comment"># if there are new migrations</span>
+php artisan optimize:clear      <span class="comment"># clear old caches</span>
+php artisan optimize            <span class="comment"># rebuild caches</span></div>
+
+  <h3>File Location Reference</h3>
+  <table class="tbl">
+    <tr><th>What</th><th>Location on Hostinger Server</th></tr>
+    <tr><td class="fname">Laravel .env</td><td><span class="inline-code">~/laravel/.env</span></td></tr>
+    <tr><td class="fname">Laravel error logs</td><td><span class="inline-code">~/laravel/storage/logs/laravel.log</span></td></tr>
+    <tr><td class="fname">Uploaded product images</td><td><span class="inline-code">~/laravel/storage/app/public/products/</span></td></tr>
+    <tr><td class="fname">Uploaded banner images</td><td><span class="inline-code">~/laravel/storage/app/public/banners/</span></td></tr>
+    <tr><td class="fname">React SPA entry</td><td><span class="inline-code">~/public_html/index.html</span></td></tr>
+    <tr><td class="fname">PHP entry point</td><td><span class="inline-code">~/public_html/index.php</span></td></tr>
+    <tr><td class="fname">Storage symlink</td><td><span class="inline-code">~/public_html/storage → ~/laravel/storage/app/public</span></td></tr>
+    <tr><td class="fname">Htaccess routing</td><td><span class="inline-code">~/public_html/.htaccess</span></td></tr>
+  </table>
+
+  <h3>Required Hostinger Plan</h3>
+  <div class="g3">
+    <div class="card">
+      <div class="card-title" style="color:var(--red);">Single / Starter</div>
+      <div class="card-body">No SSH access. Cannot run artisan commands directly. Not recommended for this project.</div>
+    </div>
+    <div class="card" style="border-color:var(--green);">
+      <div class="card-title" style="color:var(--green);">Premium / Business ✓</div>
+      <div class="card-body">SSH access included. Supports PHP 8.2. Multiple databases. Recommended minimum plan.</div>
+    </div>
+    <div class="card" style="border-color:var(--green);">
+      <div class="card-title" style="color:var(--green);">Cloud Hosting ✓✓</div>
+      <div class="card-body">Better performance. Dedicated resources. Ideal for higher traffic stores.</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:48px;padding:32px;border-top:2px solid var(--border);color:var(--muted);font-size:12px;">
+    <div style="font-size:22px;font-weight:900;color:var(--primary);margin-bottom:4px;">Myeon Casuals <span style="color:var(--accent);">Fashion</span></div>
+    <div><strong>myeoncasuals.com</strong> — Hostinger Deployment Guide — May 2026</div>
+  </div>
+
+</div>
+
+<div class="no-print">
+  <button onclick="window.print()">🖨️ Print / Save as PDF</button>
+</div>
+
+</body>
+</html>

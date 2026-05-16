@@ -1,0 +1,43 @@
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { productsApi } from '../../api/products';
+import ProductCard from '../product/ProductCard';
+import { ProductGridSkeleton } from '../ui/Skeleton';
+import Button from '../ui/Button';
+
+export default function BestSellers() {
+  const { data: products, isLoading } = useQuery({
+    queryKey: ['bestsellers'],
+    queryFn: () => productsApi.getBestsellers().then(r => r.data.data),
+  });
+
+  return (
+    <section className="bg-brand-bg py-16">
+      <div className="page-container">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="flex items-end justify-between mb-8"
+        >
+          <div>
+            <p className="text-brand-accent text-xs tracking-[0.3em] uppercase mb-1">Customer Favorites</p>
+            <h2 className="section-heading">Best Sellers</h2>
+          </div>
+          <Link to="/products?sort=popular"><Button variant="outline" size="sm">View All</Button></Link>
+        </motion.div>
+
+        {isLoading ? <ProductGridSkeleton /> : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {products?.slice(0, 8).map((product, i) => (
+              <motion.div key={product.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.07 }}>
+                <ProductCard product={product} />
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}

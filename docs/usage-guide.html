@@ -1,0 +1,1924 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Myeon Casuals — Admin & User Guide</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #2D1B69;
+    --accent:  #F59E0B;
+    --text:    #1a1a2e;
+    --muted:   #6b7280;
+    --border:  #e5e7eb;
+    --bg:      #f8f7ff;
+    --white:   #ffffff;
+    --green:   #10b981;
+    --red:     #ef4444;
+    --blue:    #3b82f6;
+  }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--white);
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { font-size: 12px; }
+    .no-print { display: none !important; }
+    .page-break { page-break-before: always; }
+    .card { break-inside: avoid; }
+    .section { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+    .toc { break-after: page; }
+  }
+
+  /* ── Cover Page ── */
+  .cover {
+    background: linear-gradient(135deg, var(--primary) 0%, #4c1d95 60%, #7c3aed 100%);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 40px;
+    page-break-after: always;
+  }
+  .cover-logo {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  .cover-logo span { color: var(--accent); }
+  .cover-tag {
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 60px;
+  }
+  .cover-title {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .cover-sub {
+    font-size: 16px;
+    opacity: 0.8;
+    max-width: 520px;
+    margin-bottom: 60px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 40px;
+    font-size: 13px;
+    opacity: 0.7;
+  }
+  .cover-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin: 4px;
+  }
+  .cover-badges { margin-bottom: 40px; }
+
+  /* ── Layout ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 48px;
+  }
+
+  /* ── TOC ── */
+  .toc { padding: 48px; max-width: 900px; margin: 0 auto; }
+  .toc h2 { font-size: 28px; color: var(--primary); margin-bottom: 32px; border-bottom: 3px solid var(--primary); padding-bottom: 12px; }
+  .toc-section { margin-bottom: 24px; }
+  .toc-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+  .toc-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dotted var(--border); color: var(--text); text-decoration: none; font-size: 14px; }
+  .toc-item:hover { color: var(--primary); }
+  .toc-num { color: var(--muted); font-size: 12px; }
+  .toc-sub { padding-left: 20px; font-size: 13px; color: var(--muted); }
+
+  /* ── Chapter Header ── */
+  .chapter {
+    background: linear-gradient(135deg, var(--primary), #4c1d95);
+    color: white;
+    padding: 48px;
+    margin-bottom: 0;
+  }
+  .chapter-num { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.6; margin-bottom: 8px; }
+  .chapter-title { font-size: 32px; font-weight: 700; }
+  .chapter-desc { font-size: 15px; opacity: 0.8; margin-top: 8px; }
+
+  /* ── Section ── */
+  .section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 24px 0;
+    overflow: hidden;
+  }
+  .section-header {
+    background: var(--bg);
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-icon {
+    width: 36px; height: 36px;
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--primary); }
+  .section-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .section-body { padding: 24px; }
+
+  /* ── Steps ── */
+  .steps { counter-reset: step; }
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    counter-increment: step;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .step-num::before { content: counter(step); }
+  .step-content { flex: 1; padding-top: 4px; }
+  .step-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: var(--text); }
+  .step-desc { font-size: 13px; color: #374151; line-height: 1.6; }
+  .step-note {
+    background: #fffbeb;
+    border-left: 3px solid var(--accent);
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #92400e;
+    border-radius: 0 4px 4px 0;
+  }
+  .step-tip {
+    background: #f0fdf4;
+    border-left: 3px solid var(--green);
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #065f46;
+    border-radius: 0 4px 4px 0;
+  }
+  .step-warn {
+    background: #fef2f2;
+    border-left: 3px solid var(--red);
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #991b1b;
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* ── Field Table ── */
+  .field-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  .field-table th { background: var(--bg); padding: 8px 12px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 2px solid var(--border); }
+  .field-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .field-table tr:last-child td { border-bottom: none; }
+  .field-table tr:hover td { background: var(--bg); }
+  .required { color: var(--red); font-size: 11px; font-weight: 600; }
+  .optional { color: var(--muted); font-size: 11px; }
+  .field-name { font-weight: 600; color: var(--primary); }
+  .field-example { font-size: 12px; color: var(--muted); font-style: italic; }
+
+  /* ── Flow Diagram ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin: 16px 0;
+    font-size: 12px;
+  }
+  .flow-box {
+    background: var(--primary);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 12px;
+    min-width: 80px;
+  }
+  .flow-box.accent { background: var(--accent); color: white; }
+  .flow-box.green  { background: var(--green); }
+  .flow-box.red    { background: var(--red); }
+  .flow-box.blue   { background: var(--blue); }
+  .flow-box.gray   { background: var(--muted); }
+  .flow-arrow {
+    padding: 0 8px;
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  /* ── Info Box ── */
+  .info-box {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: #3730a3;
+  }
+  .info-box strong { display: block; margin-bottom: 4px; font-size: 14px; }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-green  { background: #d1fae5; color: #065f46; }
+  .badge-red    { background: #fee2e2; color: #991b1b; }
+  .badge-yellow { background: #fef3c7; color: #92400e; }
+  .badge-blue   { background: #dbeafe; color: #1e40af; }
+  .badge-purple { background: #ede9fe; color: #5b21b6; }
+
+  /* ── Grid ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .card-title { font-weight: 700; font-size: 13px; color: var(--primary); margin-bottom: 6px; }
+  .card-body { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── Quick Ref ── */
+  .quick-ref { background: var(--primary); color: white; border-radius: 8px; padding: 20px 24px; margin: 16px 0; }
+  .quick-ref h4 { font-size: 14px; margin-bottom: 12px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+  .quick-ref ul { list-style: none; }
+  .quick-ref li { padding: 4px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; }
+  .quick-ref li:last-child { border-bottom: none; }
+  .quick-ref li span { opacity: 0.6; font-size: 12px; }
+
+  /* ── Headings ── */
+  h2.page-title { font-size: 28px; color: var(--primary); margin-bottom: 6px; }
+  h3.sub-title  { font-size: 20px; color: var(--primary); margin: 32px 0 16px; border-left: 4px solid var(--accent); padding-left: 12px; }
+  h4.mini-title { font-size: 15px; font-weight: 700; margin: 20px 0 10px; }
+  p.lead { font-size: 15px; color: var(--muted); margin-bottom: 24px; line-height: 1.7; }
+  p { margin-bottom: 12px; font-size: 13px; line-height: 1.6; }
+
+  /* ── Checklist ── */
+  .checklist { list-style: none; }
+  .checklist li { padding: 5px 0; font-size: 13px; display: flex; align-items: flex-start; gap: 8px; }
+  .checklist li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Numbered list ── */
+  ol.num-list { padding-left: 20px; }
+  ol.num-list li { margin-bottom: 8px; font-size: 13px; }
+
+  /* ── Divider ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* ── Sidebar nav visual ── */
+  .nav-visual {
+    background: #1e0d4c;
+    color: white;
+    border-radius: 8px;
+    padding: 20px;
+    font-size: 12px;
+    font-family: monospace;
+  }
+  .nav-visual .nav-section { color: #9ca3af; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin: 12px 0 6px; }
+  .nav-visual .nav-item { padding: 4px 0 4px 12px; }
+  .nav-visual .nav-item.active { color: var(--accent); font-weight: 700; }
+
+  /* ── URL path ── */
+  .url { font-family: monospace; font-size: 12px; background: var(--bg); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; color: #6d28d9; }
+
+  /* ── Screenshot placeholder ── */
+  .screenshot {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin: 12px 0;
+    background: var(--bg);
+  }
+
+  /* ── Spacing ── */
+  .mt-8  { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .mb-8  { margin-bottom: 8px; }
+  .mb-16 { margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     COVER PAGE
+═══════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-logo">Myeon Casuals <span>Fashion</span></div>
+  <div class="cover-tag">E-Commerce Platform</div>
+  <div class="cover-title">Complete Admin &amp;<br>User Guide</div>
+  <div class="cover-sub">Step-by-step instructions for managing your store, adding products, processing orders, and everything in between.</div>
+  <div class="cover-badges">
+    <span class="cover-badge">Admin Panel</span>
+    <span class="cover-badge">Catalog Management</span>
+    <span class="cover-badge">Order Processing</span>
+    <span class="cover-badge">Marketing Tools</span>
+    <span class="cover-badge">Reports &amp; Analytics</span>
+  </div>
+  <div class="cover-meta">
+    <div>Version 1.0</div>
+    <div>May 2026</div>
+    <div>Internal Reference</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TABLE OF CONTENTS
+═══════════════════════════════════════════════ -->
+<div class="toc">
+  <h2>Table of Contents</h2>
+
+  <div class="toc-section">
+    <div class="toc-section-title">Getting Started</div>
+    <a class="toc-item" href="#ch1">1. Admin Panel Overview &amp; Navigation <span class="toc-num">3</span></a>
+    <a class="toc-item toc-sub" href="#login">Logging In to Admin</a>
+    <a class="toc-item toc-sub" href="#nav">Admin Navigation Structure</a>
+  </div>
+
+  <div class="toc-section">
+    <div class="toc-section-title">Catalog Management</div>
+    <a class="toc-item" href="#ch2">2. Managing Categories <span class="toc-num">5</span></a>
+    <a class="toc-item toc-sub" href="#cat-create">Creating a New Category</a>
+    <a class="toc-item toc-sub" href="#cat-hierarchy">Setting Up Category Hierarchy</a>
+    <a class="toc-item" href="#ch3">3. Managing Products <span class="toc-num">8</span></a>
+    <a class="toc-item toc-sub" href="#prod-create">Adding a New Product</a>
+    <a class="toc-item toc-sub" href="#prod-variants">Adding Product Variants</a>
+    <a class="toc-item toc-sub" href="#prod-images">Uploading Product Images</a>
+    <a class="toc-item toc-sub" href="#prod-import">Bulk Import via CSV</a>
+    <a class="toc-item" href="#ch4">4. Inventory Management <span class="toc-num">12</span></a>
+  </div>
+
+  <div class="toc-section">
+    <div class="toc-section-title">Sales &amp; Orders</div>
+    <a class="toc-item" href="#ch5">5. Processing Orders <span class="toc-num">13</span></a>
+    <a class="toc-item toc-sub" href="#order-flow">Order Status Pipeline</a>
+    <a class="toc-item toc-sub" href="#order-steps">Step-by-Step Order Processing</a>
+    <a class="toc-item" href="#ch6">6. Managing Customers <span class="toc-num">16</span></a>
+    <a class="toc-item" href="#ch7">7. Handling Returns <span class="toc-num">17</span></a>
+  </div>
+
+  <div class="toc-section">
+    <div class="toc-section-title">Marketing</div>
+    <a class="toc-item" href="#ch8">8. Banners &amp; Homepage Content <span class="toc-num">18</span></a>
+    <a class="toc-item" href="#ch9">9. Coupons &amp; Discounts <span class="toc-num">20</span></a>
+    <a class="toc-item" href="#ch10">10. Customer Reviews <span class="toc-num">22</span></a>
+  </div>
+
+  <div class="toc-section">
+    <div class="toc-section-title">Configuration &amp; Analytics</div>
+    <a class="toc-item" href="#ch11">11. Shipping Zones <span class="toc-num">23</span></a>
+    <a class="toc-item" href="#ch12">12. Store Settings <span class="toc-num">24</span></a>
+    <a class="toc-item" href="#ch13">13. Reports &amp; Analytics <span class="toc-num">25</span></a>
+  </div>
+
+  <div class="toc-section">
+    <div class="toc-section-title">Customer Guide</div>
+    <a class="toc-item" href="#ch14">14. How Customers Shop <span class="toc-num">27</span></a>
+    <a class="toc-item" href="#ch15">15. Customer Account &amp; Orders <span class="toc-num">29</span></a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 1 — OVERVIEW & NAVIGATION
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch1"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 1</div>
+  <div class="chapter-title">Admin Panel Overview &amp; Navigation</div>
+  <div class="chapter-desc">How to access and navigate the admin dashboard</div>
+</div>
+
+<div class="container">
+
+  <div class="section" id="login">
+    <div class="section-header">
+      <div class="section-icon">🔐</div>
+      <div>
+        <div class="section-title">Logging In to Admin</div>
+        <div class="section-sub">Access the admin panel at <span class="url">/admin</span></div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Open the Admin URL</div>
+            <div class="step-desc">In your browser, go to your store URL followed by <span class="url">/admin</span> — for example: <span class="url">http://last-ecom.test/admin</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Enter Your Credentials</div>
+            <div class="step-desc">Enter your admin email and password. Only accounts with the <span class="badge badge-purple">admin</span> role can access this area.</div>
+            <div class="step-warn">Never share your admin credentials. If you need to add a team member, create a separate admin account.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">You're on the Dashboard</div>
+            <div class="step-desc">After login you land on the Dashboard showing today's sales, recent orders, and stock alerts.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="nav">
+    <div class="section-header">
+      <div class="section-icon">🗺️</div>
+      <div>
+        <div class="section-title">Admin Navigation Structure</div>
+        <div class="section-sub">Left sidebar gives you access to every admin feature</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="grid-2">
+        <div>
+          <div class="nav-visual">
+            <div style="font-size:14px;font-weight:700;margin-bottom:16px;">Myeon Casuals Admin</div>
+            <div class="nav-section">Main</div>
+            <div class="nav-item active">📊 Dashboard</div>
+            <div class="nav-section">Catalog</div>
+            <div class="nav-item">📦 Products</div>
+            <div class="nav-item">🗂️ Categories</div>
+            <div class="nav-item">📋 Inventory</div>
+            <div class="nav-section">Sales</div>
+            <div class="nav-item">🛒 Orders</div>
+            <div class="nav-item">👥 Customers</div>
+            <div class="nav-item">↩️ Returns</div>
+            <div class="nav-section">Marketing</div>
+            <div class="nav-item">🏷️ Coupons</div>
+            <div class="nav-item">🖼️ Banners</div>
+            <div class="nav-item">⭐ Reviews</div>
+            <div class="nav-item">📈 Reports</div>
+            <div class="nav-section">Configuration</div>
+            <div class="nav-item">🚚 Shipping</div>
+            <div class="nav-item">⚙️ Settings</div>
+          </div>
+        </div>
+        <div>
+          <h4 class="mini-title">What each section does</h4>
+          <table class="field-table">
+            <tr><th>Section</th><th>Purpose</th></tr>
+            <tr><td class="field-name">Dashboard</td><td>Real-time sales KPIs, charts, recent orders</td></tr>
+            <tr><td class="field-name">Products</td><td>Add, edit, delete products and variants</td></tr>
+            <tr><td class="field-name">Categories</td><td>Manage 3-level category tree</td></tr>
+            <tr><td class="field-name">Inventory</td><td>Update stock levels for variants</td></tr>
+            <tr><td class="field-name">Orders</td><td>Process orders through shipping pipeline</td></tr>
+            <tr><td class="field-name">Customers</td><td>View profiles, spending, order history</td></tr>
+            <tr><td class="field-name">Returns</td><td>Approve or reject return requests</td></tr>
+            <tr><td class="field-name">Coupons</td><td>Create discount codes and offers</td></tr>
+            <tr><td class="field-name">Banners</td><td>Hero slider, popups, promotional images</td></tr>
+            <tr><td class="field-name">Reviews</td><td>Approve or reject customer reviews</td></tr>
+            <tr><td class="field-name">Reports</td><td>Sales, GST, profit, inventory reports</td></tr>
+            <tr><td class="field-name">Shipping</td><td>Define delivery zones and rates</td></tr>
+            <tr><td class="field-name">Settings</td><td>Store info, payment, email config</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 2 — CATEGORIES
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch2"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 2</div>
+  <div class="chapter-title">Managing Categories</div>
+  <div class="chapter-desc">Organize your products with a 3-level category hierarchy</div>
+</div>
+
+<div class="container">
+
+  <div class="info-box">
+    <strong>📌 Why categories matter</strong>
+    Categories control how products appear in your store navigation. Customers browse by category — so a clear, well-organized hierarchy makes products easier to find. Your site supports <strong>3 levels</strong>: Parent → Child → Sub-child.
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🌳</div>
+      <div>
+        <div class="section-title">Category Hierarchy Explained</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">Level 1 — Parent</div>
+          <div class="card-body">Main top-level category. Appears in the main navigation menu.<br><br><strong>Examples:</strong> Women, Men, Kids</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Level 2 — Child</div>
+          <div class="card-body">Sub-category under a parent. Appears as dropdown items in nav.<br><br><strong>Examples:</strong> Sarees, Kurtas, Lehengas (under Women)</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Level 3 — Sub-child</div>
+          <div class="card-body">Deepest level. Indented inside dropdown.<br><br><strong>Examples:</strong> Silk Sarees, Cotton Sarees (under Sarees)</div>
+        </div>
+      </div>
+      <div class="info-box mt-16">
+        <strong>Recommended starting structure for a fashion store:</strong>
+        <div style="margin-top:8px;font-family:monospace;font-size:12px;">
+          Women → Sarees → Silk Sarees / Cotton Sarees / Printed Sarees<br>
+          Women → Kurtas → Anarkali / Straight Cut / Palazzo Set<br>
+          Women → Lehengas → Bridal / Party Wear<br>
+          Men → Ethnic → Kurta Pyjama / Sherwani<br>
+          Kids → Girls / Boys
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="cat-create">
+    <div class="section-header">
+      <div class="section-icon">➕</div>
+      <div>
+        <div class="section-title">How to Add a New Category</div>
+        <div class="section-sub">Go to Admin → Categories → click "Add Category"</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Go to Categories</div>
+            <div class="step-desc">In the left sidebar, click <strong>Categories</strong> under the CATALOG section.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Click "Add Category"</div>
+            <div class="step-desc">The button is in the top-right corner of the Categories page. A form will appear at the top of the page.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Fill in Category Details</div>
+            <div class="step-desc">Complete the form fields below:</div>
+            <div style="margin-top:12px;">
+              <table class="field-table">
+                <tr><th>Field</th><th>What to Enter</th><th>Required?</th></tr>
+                <tr>
+                  <td class="field-name">Name</td>
+                  <td>Category display name (e.g., "Silk Sarees")<br><span class="field-example">The URL slug is auto-generated from the name</span></td>
+                  <td><span class="required">Required</span></td>
+                </tr>
+                <tr>
+                  <td class="field-name">Parent Category</td>
+                  <td>Select a parent if this is a child/sub-child category. Leave blank for a top-level (Level 1) category.</td>
+                  <td><span class="optional">Optional</span></td>
+                </tr>
+                <tr>
+                  <td class="field-name">Description</td>
+                  <td>Short description shown on the category page</td>
+                  <td><span class="optional">Optional</span></td>
+                </tr>
+                <tr>
+                  <td class="field-name">Image</td>
+                  <td>Square image for category card (JPG/PNG, min 400×400px recommended)</td>
+                  <td><span class="optional">Optional</span></td>
+                </tr>
+                <tr>
+                  <td class="field-name">Banner Image</td>
+                  <td>Wide banner shown at the top of the category page (1200×300px recommended)</td>
+                  <td><span class="optional">Optional</span></td>
+                </tr>
+                <tr>
+                  <td class="field-name">Sort Order</td>
+                  <td>Number to control display order. Lower number = shown first. Use 10, 20, 30... to leave room for insertions.</td>
+                  <td><span class="optional">Optional</span></td>
+                </tr>
+                <tr>
+                  <td class="field-name">Active</td>
+                  <td>Toggle ON to make category visible to customers</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td class="field-name">Show in Menu</td>
+                  <td>Toggle ON to display in the top navigation menu</td>
+                  <td>—</td>
+                </tr>
+              </table>
+            </div>
+            <div class="step-note">The slug (URL-friendly name) is auto-generated. For "Silk Sarees" it becomes <span class="url">/categories/silk-sarees</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Save the Category</div>
+            <div class="step-desc">Click <strong>Save Category</strong>. The new category appears in the list immediately.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Add Child Categories (Next Step)</div>
+            <div class="step-desc">Repeat the process, but this time select the parent category you just created from the "Parent Category" dropdown. This creates a child category under it.</div>
+            <div class="step-tip">Best practice: Create all Level 1 (parent) categories first, then go back and add Level 2 children, then Level 3 sub-children.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="cat-hierarchy">
+    <div class="section-header">
+      <div class="section-icon">📋</div>
+      <div>
+        <div class="section-title">Step-by-Step: Build a Full Category Tree</div>
+        <div class="section-sub">Example: Adding "Women → Sarees → Silk Sarees"</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Create the Parent: "Women"</div>
+            <div class="step-desc">Name: <strong>Women</strong> | Parent: <em>None</em> | Show in Menu: <strong>ON</strong> | Sort Order: <strong>10</strong> → Save</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Create the Child: "Sarees"</div>
+            <div class="step-desc">Name: <strong>Sarees</strong> | Parent: <strong>Women</strong> | Show in Menu: <strong>ON</strong> | Sort Order: <strong>10</strong> → Save</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Create the Sub-Child: "Silk Sarees"</div>
+            <div class="step-desc">Name: <strong>Silk Sarees</strong> | Parent: <strong>Sarees</strong> | Show in Menu: <strong>ON</strong> | Sort Order: <strong>10</strong> → Save</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Verify in Navigation</div>
+            <div class="step-desc">Open your storefront. Hover over <strong>Women</strong> in the top nav → you'll see <strong>Sarees</strong> as a dropdown → and <strong>└ Silk Sarees</strong> indented below it.</div>
+            <div class="step-tip">If the category doesn't appear, check that both "Active" and "Show in Menu" are toggled ON.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 3 — PRODUCTS
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch3"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 3</div>
+  <div class="chapter-title">Managing Products</div>
+  <div class="chapter-desc">Add, edit, and publish products with variants, images, and pricing</div>
+</div>
+
+<div class="container">
+
+  <div class="section" id="prod-create">
+    <div class="section-header">
+      <div class="section-icon">➕</div>
+      <div>
+        <div class="section-title">Adding a New Product — Step by Step</div>
+        <div class="section-sub">Admin → Products → click "+ Add Product"</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <h4 class="mini-title">Step 1 — Basic Information</h4>
+      <table class="field-table">
+        <tr><th>Field</th><th>What to Enter</th><th></th></tr>
+        <tr><td class="field-name">Product Name</td><td>Full product name. E.g., "Kanjivaram Silk Saree - Royal Blue"<br><span class="field-example">Slug auto-generated: /products/kanjivaram-silk-saree-royal-blue</span></td><td><span class="required">Required</span></td></tr>
+        <tr><td class="field-name">Category</td><td>Select from the category tree (3 levels). Choose the most specific sub-category.</td><td><span class="required">Required</span></td></tr>
+        <tr><td class="field-name">Description</td><td>Detailed product description. Include material, occasion, features. HTML formatting supported.</td><td><span class="required">Required</span></td></tr>
+        <tr><td class="field-name">Brand</td><td>Brand or manufacturer name (optional)</td><td><span class="optional">Optional</span></td></tr>
+        <tr><td class="field-name">SKU</td><td>Your internal product code. E.g., "KSS-RB-001". Must be unique.</td><td><span class="optional">Optional</span></td></tr>
+        <tr><td class="field-name">Fabric</td><td>Material type — "100% Pure Silk", "Cotton Blend", etc.</td><td><span class="optional">Optional</span></td></tr>
+        <tr><td class="field-name">Care Instructions</td><td>Washing/care details — "Dry clean only", "Hand wash in cold water"</td><td><span class="optional">Optional</span></td></tr>
+        <tr><td class="field-name">Tags</td><td>Comma-separated keywords for search: "saree, silk, bridal, traditional"</td><td><span class="optional">Optional</span></td></tr>
+      </table>
+
+      <h4 class="mini-title">Step 2 — Pricing</h4>
+      <table class="field-table">
+        <tr><th>Field</th><th>What to Enter</th><th></th></tr>
+        <tr><td class="field-name">MRP / Base Price</td><td>Maximum Retail Price (before discount). This is the crossed-out price shown to customers.</td><td><span class="required">Required</span></td></tr>
+        <tr><td class="field-name">Sale Price</td><td>Actual selling price. Must be ≤ MRP. The discount % is auto-calculated from MRP vs Sale Price.</td><td><span class="required">Required</span></td></tr>
+        <tr><td class="field-name">Cost Price</td><td>Your purchase/manufacturing cost. Used only for profit reports — not shown to customers.</td><td><span class="optional">Optional</span></td></tr>
+      </table>
+      <div class="info-box">
+        <strong>💡 Pricing Example</strong>
+        MRP = ₹4,999 | Sale Price = ₹2,999 → Customers see <strong>₹2,999</strong> with <strong>₹4,999</strong> crossed out and a <span class="badge badge-red">40% OFF</span> badge.
+      </div>
+
+      <h4 class="mini-title">Step 3 — Product Flags</h4>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">✅ Active</div>
+          <div class="card-body">Turn ON to publish. Turn OFF to hide from customers without deleting.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">⭐ Featured</div>
+          <div class="card-body">Appears in "Featured Collections" section on the homepage.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">🆕 New Arrival</div>
+          <div class="card-body">Appears in "New Arrivals" section on the homepage.</div>
+        </div>
+      </div>
+
+      <h4 class="mini-title">Step 4 — SEO Settings</h4>
+      <table class="field-table">
+        <tr><th>Field</th><th>What to Enter</th></tr>
+        <tr><td class="field-name">Meta Title</td><td>Page title for Google (60 chars max). E.g., "Buy Kanjivaram Silk Saree Online | Myeon Casuals"</td></tr>
+        <tr><td class="field-name">Meta Description</td><td>Search result snippet (155 chars max). Describe the product with keywords.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section" id="prod-variants">
+    <div class="section-header">
+      <div class="section-icon">🎨</div>
+      <div>
+        <div class="section-title">Adding Product Variants (Sizes &amp; Colors)</div>
+        <div class="section-sub">Use variants when a product comes in multiple sizes, colors, or combinations</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Enable Variants</div>
+            <div class="step-desc">On the Add/Edit Product page, toggle ON <strong>"Has Variants"</strong>. A variant table will appear below.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Click "Add Variant"</div>
+            <div class="step-desc">A new row appears in the variant table. Fill in each column:</div>
+            <table class="field-table" style="margin-top:8px;">
+              <tr><th>Column</th><th>Example</th><th>Notes</th></tr>
+              <tr><td class="field-name">Size</td><td>S, M, L, XL, Free Size</td><td>What size/dimension</td></tr>
+              <tr><td class="field-name">Color</td><td>Royal Blue</td><td>Color name (text)</td></tr>
+              <tr><td class="field-name">Color Hex</td><td>#1e3a8a</td><td>Color swatch (6-digit hex code)</td></tr>
+              <tr><td class="field-name">SKU</td><td>KSS-RB-M</td><td>Unique code for this variant</td></tr>
+              <tr><td class="field-name">Price</td><td>2999</td><td>Overrides base price for this variant</td></tr>
+              <tr><td class="field-name">Stock</td><td>25</td><td>Units available for this variant</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Add More Variants</div>
+            <div class="step-desc">Click "Add Variant" again for each size/color combination. For a saree in 3 colors: add 3 rows, one per color.</div>
+            <div class="step-tip">If all variants have the same price, only fill the base Sale Price and leave variant Price empty — it will inherit the base price.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Save the Product</div>
+            <div class="step-desc">Variants are saved along with the product. Customers will see size/color selectors on the product page.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="prod-images">
+    <div class="section-header">
+      <div class="section-icon">📷</div>
+      <div>
+        <div class="section-title">Uploading Product Images</div>
+        <div class="section-sub">High-quality images are key to conversions</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Save the Product First</div>
+            <div class="step-desc">Images are uploaded after the product is created. Save basic info first, then scroll down to the Images section.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Upload Images</div>
+            <div class="step-desc">Click the upload area or drag-and-drop JPG/PNG files. You can upload multiple images at once.</div>
+            <div class="step-note">Recommended size: <strong>800×1000px</strong> (portrait, 4:5 ratio works best). Maximum file size: 2MB per image.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Set the Primary Image</div>
+            <div class="step-desc">The first image becomes the primary product thumbnail shown in listings. Drag to reorder images if needed.</div>
+            <div class="step-tip">Add 4–6 images: front view, back view, close-up of fabric/design, and a styled lifestyle shot.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="prod-import">
+    <div class="section-header">
+      <div class="section-icon">📊</div>
+      <div>
+        <div class="section-title">Bulk Import Products via CSV</div>
+        <div class="section-sub">Add hundreds of products at once using a spreadsheet</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Download the Template</div>
+            <div class="step-desc">Go to <strong>Admin → Products</strong> and click <strong>"Import"</strong>, then download the CSV template. This gives you the correct column format.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Fill the Spreadsheet</div>
+            <div class="step-desc">Open in Excel or Google Sheets. Fill one product per row. Required columns: name, category_slug, base_price, sale_price, status.</div>
+            <div class="step-warn">The <strong>category_slug</strong> column must match an existing category slug exactly (e.g., "silk-sarees"). Create categories first before importing.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Upload and Import</div>
+            <div class="step-desc">Save as CSV, then upload the file via the Import button. Products are created immediately.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 4 — INVENTORY
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch4"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 4</div>
+  <div class="chapter-title">Inventory Management</div>
+  <div class="chapter-desc">Monitor and update stock levels for all product variants</div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📋</div>
+      <div>
+        <div class="section-title">Updating Stock Levels</div>
+        <div class="section-sub">Admin → Inventory</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Go to Inventory</div>
+            <div class="step-desc">Click <strong>Inventory</strong> in the left sidebar. You'll see all product variants in a table.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Search for a Product</div>
+            <div class="step-desc">Use the search box to find a product by name. All its variants will be listed.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Edit Stock</div>
+            <div class="step-desc">Click the <strong>Edit</strong> icon next to a variant. Type the new stock number and click <strong>Save</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Watch for Alerts</div>
+            <div class="step-desc">The dashboard shows a <strong>Low Stock Items</strong> count when any variant drops below 5 units. Restock before it hits zero.</div>
+            <div class="step-warn">When stock = 0, customers see "Out of Stock" and cannot add to cart. Keep buffer stock of at least 5 units per variant.</div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:16px;">
+        <div class="card">
+          <div class="card-title" style="color:#92400e;">🟡 Low Stock Warning</div>
+          <div class="card-body">Highlighted in <strong>yellow</strong> when stock &lt; 5 units. Reorder immediately.</div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="color:#991b1b;">🔴 Out of Stock</div>
+          <div class="card-body">Highlighted in <strong>red</strong> with "Out" badge. Product hidden from "Add to Cart" on storefront.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 5 — ORDERS
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch5"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 5</div>
+  <div class="chapter-title">Processing Orders</div>
+  <div class="chapter-desc">From new order to delivered — the complete order management workflow</div>
+</div>
+
+<div class="container">
+
+  <div class="section" id="order-flow">
+    <div class="section-header">
+      <div class="section-icon">🔄</div>
+      <div>
+        <div class="section-title">Order Status Pipeline</div>
+        <div class="section-sub">Every order moves through these stages in sequence</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="flow" style="flex-wrap:wrap;gap:4px;margin-bottom:20px;">
+        <div class="flow-box accent">Pending</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">Confirmed</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">Packed</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box blue">Shipped</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:#7c3aed;">Out for Delivery</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box green">Delivered</div>
+      </div>
+      <div class="flow" style="margin-bottom:0;">
+        <div class="flow-box red">Cancelled</div>
+        <span style="margin-left:8px;font-size:12px;color:var(--muted);">— Can happen at any stage before shipping</span>
+      </div>
+      <div style="margin-top:16px;">
+        <table class="field-table">
+          <tr><th>Status</th><th>Meaning</th><th>Admin Action Needed</th></tr>
+          <tr><td><span class="badge badge-yellow">Pending</span></td><td>Customer placed order, awaiting confirmation</td><td>Review and Accept</td></tr>
+          <tr><td><span class="badge badge-blue">Confirmed</span></td><td>Order accepted, preparing to pack</td><td>Pack the items</td></tr>
+          <tr><td><span class="badge badge-purple">Packed</span></td><td>Items packed, ready to hand to courier</td><td>Add tracking & dispatch</td></tr>
+          <tr><td><span class="badge badge-blue">Shipped</span></td><td>Courier has picked up the parcel</td><td>Monitor delivery</td></tr>
+          <tr><td><span class="badge" style="background:#ede9fe;color:#5b21b6;">Out for Delivery</span></td><td>Last-mile delivery in progress</td><td>No action needed</td></tr>
+          <tr><td><span class="badge badge-green">Delivered</span></td><td>Customer received the order</td><td>None (completed)</td></tr>
+          <tr><td><span class="badge badge-red">Cancelled</span></td><td>Order cancelled by customer or admin</td><td>Process refund if paid</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="order-steps">
+    <div class="section-header">
+      <div class="section-icon">📦</div>
+      <div>
+        <div class="section-title">Step-by-Step Order Processing</div>
+        <div class="section-sub">Admin → Orders</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Check for New Orders</div>
+            <div class="step-desc">Go to <strong>Admin → Orders</strong>. You'll see a pipeline view. The <strong>"New Orders"</strong> column shows all pending orders waiting for your action.</div>
+            <div class="step-tip">Check orders at least twice a day — morning and afternoon. Enable browser notifications if available.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Review the Order</div>
+            <div class="step-desc">Click <strong>View</strong> on any pending order to see: customer details, items ordered, delivery address, payment method (COD/Online), and payment status.</div>
+            <div class="step-warn">If payment method is "Online" and payment status is "Pending", the customer hasn't paid yet. Wait for payment before accepting.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Accept the Order</div>
+            <div class="step-desc">Click <strong>"Accept"</strong> on the order card. Status changes from <span class="badge badge-yellow">Pending</span> → <span class="badge badge-blue">Confirmed</span>. An SMS/WhatsApp notification link is shown for you to notify the customer.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Pack the Order</div>
+            <div class="step-desc">Physically pack the items. Then click <strong>"Mark as Packed"</strong> in the order. Status becomes <span class="badge badge-purple">Packed</span>.</div>
+            <div class="step-note">At this stage you can download a <strong>Manifest CSV</strong> listing all "Ready to Ship" orders — useful for handing to courier partner.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Add Tracking &amp; Dispatch</div>
+            <div class="step-desc">Once the courier picks up the parcel, click <strong>"Dispatch"</strong>. A form appears to enter:</div>
+            <table class="field-table" style="margin-top:8px;">
+              <tr><th>Field</th><th>Example</th></tr>
+              <tr><td class="field-name">Courier Name</td><td>Delhivery / BlueDart / DTDC / Ekart</td></tr>
+              <tr><td class="field-name">Tracking Number</td><td>DEL1234567890</td></tr>
+              <tr><td class="field-name">Tracking URL</td><td>https://www.delhivery.com/track/...</td></tr>
+            </table>
+            <div class="step-tip">Get the tracking number from your courier partner's app/dashboard. Customers can track their order using this number.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Order Delivered</div>
+            <div class="step-desc">When the courier delivers the parcel, manually update the status to <span class="badge badge-green">Delivered</span> from the order detail page. For COD orders, collect payment is confirmed at this step.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>📱 WhatsApp Quick Notification</strong>
+        Each order card has a WhatsApp link pre-filled with the customer's name and order number. Click it to open WhatsApp Web and send a quick confirmation message.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 6 — CUSTOMERS
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch6"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 6</div>
+  <div class="chapter-title">Managing Customers</div>
+  <div class="chapter-desc">View customer profiles, purchase history, and account management</div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">👥</div>
+      <div>
+        <div class="section-title">Customer Management</div>
+        <div class="section-sub">Admin → Customers</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Search for a Customer</div>
+            <div class="step-desc">Use the search bar to find by name, email, or phone number. Filter by <strong>All / Active / Blocked</strong> tabs.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">View Customer Details</div>
+            <div class="step-desc">Click a customer row to see: full profile, all past orders, saved addresses, and spending summary (total orders, total spent, average order value).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Block / Unblock a Customer</div>
+            <div class="step-desc">If a customer is fraudulent or abusive, click <strong>Block</strong>. They can no longer log in. You can unblock anytime.</div>
+            <div class="step-warn">Blocking is permanent until you manually unblock. Blocked customers see a "Your account has been suspended" message.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 7 — RETURNS
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch7"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 7</div>
+  <div class="chapter-title">Handling Returns</div>
+  <div class="chapter-desc">Manage customer return requests efficiently</div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">↩️</div>
+      <div>
+        <div class="section-title">Return Request Workflow</div>
+        <div class="section-sub">Admin → Returns</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="flow" style="margin-bottom:24px;">
+        <div class="flow-box accent">Return Submitted</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">Pending Review</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box green">Approved</div>
+        <div class="flow-arrow">/</div>
+        <div class="flow-box red">Rejected</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box gray">Completed</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Review the Return Request</div>
+            <div class="step-desc">Go to <strong>Returns</strong>. Filter to <strong>Pending</strong> tab. Each request shows: the original order, the item, customer's reason, description, and any attached photos.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Approve or Reject</div>
+            <div class="step-desc">Use the status dropdown to select <strong>Approved</strong> or <strong>Rejected</strong>. Add an admin note to explain your decision (the customer will see this).</div>
+            <div class="step-note">If approved, coordinate the pickup/return with your courier partner manually — the platform does not auto-schedule pickups.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Mark as Completed</div>
+            <div class="step-desc">Once the refund/exchange is processed, change status to <strong>Completed</strong>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 8 — BANNERS
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch8"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 8</div>
+  <div class="chapter-title">Banners &amp; Homepage Content</div>
+  <div class="chapter-desc">Control what customers see on your homepage hero slider and promotional sections</div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🖼️</div>
+      <div>
+        <div class="section-title">Banner Positions Explained</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🦸 Hero</div>
+          <div class="card-body">Full-width slider at the top of the homepage. This is the first thing customers see. Multiple hero banners auto-rotate. <strong>Recommended size: 1440×600px</strong></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📑 Category</div>
+          <div class="card-body">Promotional banner within the category listing page. Used for seasonal offers on specific categories. <strong>Recommended: 1200×300px</strong></div>
+        </div>
+        <div class="card">
+          <div class="card-title">💬 Popup</div>
+          <div class="card-body">Modal popup shown to customers (e.g., newsletter signup, sale announcement). Use sparingly — no more than 1 active popup.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">📰 Strip</div>
+          <div class="card-body">Thin horizontal banner (like the top bar). Good for shipping offers or discount codes. <strong>Recommended: 1440×80px</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">➕</div>
+      <div>
+        <div class="section-title">Adding a Hero Banner — Step by Step</div>
+        <div class="section-sub">Admin → Banners → "+ Add Banner"</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Click "+ Add Banner"</div>
+            <div class="step-desc">In Admin → Banners, click the button at the top right. A form appears.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Fill in Banner Details</div>
+            <table class="field-table">
+              <tr><th>Field</th><th>What to Enter</th></tr>
+              <tr><td class="field-name">Title</td><td>Main heading on the banner. E.g., "New Festive Collection"</td></tr>
+              <tr><td class="field-name">Subtitle</td><td>Supporting text. E.g., "Discover Premium Ethnic Wear"</td></tr>
+              <tr><td class="field-name">Link URL</td><td>Where the button takes the customer. E.g., <span class="url">/categories/sarees</span></td></tr>
+              <tr><td class="field-name">Button Text</td><td>CTA button label. E.g., "Shop Now", "Explore Collection"</td></tr>
+              <tr><td class="field-name">Position</td><td>Select <strong>hero</strong> for homepage slider</td></tr>
+              <tr><td class="field-name">Sort Order</td><td>Controls slide order. 1 = shown first in the slider</td></tr>
+              <tr><td class="field-name">Image</td><td>Upload the banner image (JPG/PNG, 1440×600px recommended)</td></tr>
+              <tr><td class="field-name">Starts At / Expires At</td><td>Leave <strong>blank</strong> for a permanent banner. Set dates only for time-limited campaigns (e.g., a 3-day sale).</td></tr>
+              <tr><td class="field-name">Active</td><td>Toggle ON to show on the website</td></tr>
+            </table>
+            <div class="step-warn">⚠️ If you set an Expires At date, the banner will automatically disappear after that date. Leave blank for permanent banners.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Save and Check Frontend</div>
+            <div class="step-desc">Click <strong>Save Banner</strong>. Refresh your homepage to see the new slide in the hero slider.</div>
+            <div class="step-tip">For best results: use 2–4 hero banners. Each slide auto-rotates every 5 seconds.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 9 — COUPONS
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch9"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 9</div>
+  <div class="chapter-title">Coupons &amp; Discounts</div>
+  <div class="chapter-desc">Create promotional codes to drive sales and reward customers</div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🏷️</div>
+      <div>
+        <div class="section-title">Types of Coupons</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">% Percentage</div>
+          <div class="card-body">Takes a % off the cart total.<br><strong>Example:</strong> SAVE20 → 20% off any order<br>Set <em>Max Discount</em> to cap the savings (e.g., max ₹500 off)</div>
+        </div>
+        <div class="card">
+          <div class="card-title">₹ Flat Amount</div>
+          <div class="card-body">Takes a fixed amount off.<br><strong>Example:</strong> FLAT200 → ₹200 off orders above ₹999</div>
+        </div>
+        <div class="card">
+          <div class="card-title">🚚 Free Shipping</div>
+          <div class="card-body">Removes the shipping charge.<br><strong>Example:</strong> FREESHIP → No delivery charges</div>
+        </div>
+        <div class="card">
+          <div class="card-title">🎁 BOGO</div>
+          <div class="card-body">Buy One Get One free.<br><strong>Example:</strong> BOGO2024 → Buy any kurta, get one free</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">➕</div>
+      <div>
+        <div class="section-title">Creating a Coupon — Step by Step</div>
+        <div class="section-sub">Admin → Coupons → "+ Add Coupon"</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Enter Coupon Code</div>
+            <div class="step-desc">The code customers will type at checkout. Use uppercase letters, no spaces. E.g., <strong>WELCOME10</strong>, <strong>DIWALI25</strong>, <strong>FLAT500</strong></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Set Type and Value</div>
+            <div class="step-desc">Select <strong>Percentage</strong>, enter Value: <strong>10</strong> (means 10% off). Or select <strong>Flat</strong>, enter Value: <strong>200</strong> (means ₹200 off).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Set Restrictions</div>
+            <table class="field-table">
+              <tr><th>Field</th><th>What it does</th></tr>
+              <tr><td class="field-name">Min Order Value</td><td>Coupon only works if cart total ≥ this amount. E.g., ₹999 means coupon needs min ₹999 cart.</td></tr>
+              <tr><td class="field-name">Max Discount</td><td>(For % coupons) Maximum discount given. E.g., 20% off but max ₹500.</td></tr>
+              <tr><td class="field-name">Usage Limit</td><td>Total uses allowed across all customers. E.g., 100 = first 100 customers can use it.</td></tr>
+              <tr><td class="field-name">First Order Only</td><td>Toggle ON to restrict to customers who haven't ordered before.</td></tr>
+              <tr><td class="field-name">Expires At</td><td>Auto-deactivates after this date. Leave blank for no expiry.</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Save and Share</div>
+            <div class="step-desc">Click Save. Share the code on WhatsApp, Instagram, or email campaigns. Customers type it in the cart page.</div>
+          </div>
+        </div>
+      </div>
+      <div class="info-box">
+        <strong>💡 Welcome Coupon Best Practice</strong>
+        Create a coupon code <strong>WELCOME10</strong> (10% off, first order only, no expiry). Display it prominently in the site's top bar strip. This converts first-time visitors into buyers.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 10 — REVIEWS
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch10"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 10</div>
+  <div class="chapter-title">Customer Reviews</div>
+  <div class="chapter-desc">Moderate and manage product reviews from customers</div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⭐</div>
+      <div>
+        <div class="section-title">Review Moderation</div>
+        <div class="section-sub">Admin → Reviews</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="info-box">
+        <strong>How it works:</strong> When a customer submits a review on a product page, it goes to <span class="badge badge-yellow">Pending</span> status and is NOT shown on the storefront until you approve it.
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Go to Reviews → Pending Tab</div>
+            <div class="step-desc">Filter to see only pending reviews. Each row shows: product name, customer, star rating, review title and body, and date submitted.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Read the Review</div>
+            <div class="step-desc">Check if the review is genuine, relevant to the product, and doesn't contain inappropriate content.</div>
+            <div class="step-tip">Approve even mixed reviews (3-4 stars) — a mix of positive and critical reviews builds customer trust better than only 5-star reviews.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Approve or Reject</div>
+            <div class="step-desc">Click <span class="badge badge-green">Approve</span> to publish it on the product page, or <span class="badge badge-red">Reject</span> if it's spam/inappropriate.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 11 — SHIPPING
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch11"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 11</div>
+  <div class="chapter-title">Shipping Zones</div>
+  <div class="chapter-desc">Configure delivery rates and coverage areas</div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🚚</div>
+      <div>
+        <div class="section-title">Creating a Shipping Zone</div>
+        <div class="section-sub">Admin → Shipping → "+ Add Zone"</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Click "+ Add Zone"</div>
+            <div class="step-desc">You'll see a form to define a new delivery zone.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Fill in Zone Details</div>
+            <table class="field-table">
+              <tr><th>Field</th><th>Example</th><th>Notes</th></tr>
+              <tr><td class="field-name">Zone Name</td><td>Standard India / South India / Local Chennai</td><td>Internal label</td></tr>
+              <tr><td class="field-name">Flat Rate</td><td>₹60</td><td>Shipping charge per order</td></tr>
+              <tr><td class="field-name">Free Shipping Above</td><td>₹999</td><td>No charge if order total ≥ this</td></tr>
+              <tr><td class="field-name">Estimated Days</td><td>5-7</td><td>Delivery time shown to customer</td></tr>
+              <tr><td class="field-name">Pincodes</td><td>600001, 600002, 600003</td><td>Comma-separated. Leave blank for nationwide.</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Save and Test</div>
+            <div class="step-desc">Go to the storefront, add an item to cart, proceed to checkout, and enter a pincode from your zone. The correct shipping rate should appear.</div>
+            <div class="step-tip">Create a "Nationwide" zone with pincodes blank as a fallback for any pincode not covered by specific zones.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 12 — SETTINGS
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch12"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 12</div>
+  <div class="chapter-title">Store Settings</div>
+  <div class="chapter-desc">Configure payment, store info, and system settings</div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⚙️</div>
+      <div>
+        <div class="section-title">Key Settings to Configure</div>
+        <div class="section-sub">Admin → Settings</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <h4 class="mini-title">General Settings</h4>
+      <table class="field-table">
+        <tr><th>Setting</th><th>What to Set</th></tr>
+        <tr><td class="field-name">Store Name</td><td>Your brand name — "Myeon Casuals"</td></tr>
+        <tr><td class="field-name">Logo</td><td>Upload your store logo (PNG with transparent background, 200×60px)</td></tr>
+        <tr><td class="field-name">Favicon</td><td>Browser tab icon (32×32px ICO or PNG)</td></tr>
+        <tr><td class="field-name">Currency</td><td>INR (Indian Rupee) — ₹</td></tr>
+      </table>
+
+      <h4 class="mini-title">Payment Settings</h4>
+      <table class="field-table">
+        <tr><th>Setting</th><th>Notes</th></tr>
+        <tr><td class="field-name">Online Payment (Razorpay)</td><td>Toggle ON and enter your Razorpay Key ID and Secret from the Razorpay dashboard</td></tr>
+        <tr><td class="field-name">Cash on Delivery (COD)</td><td>Toggle ON to allow customers to pay when the order is delivered</td></tr>
+      </table>
+      <div class="step-warn">To accept online payments, you must have a Razorpay account. Get keys from <strong>razorpay.com → Settings → API Keys</strong>.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 13 — REPORTS
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch13"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 13</div>
+  <div class="chapter-title">Reports &amp; Analytics</div>
+  <div class="chapter-desc">Understand your business performance with 6 built-in report types</div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📈</div>
+      <div>
+        <div class="section-title">Available Reports</div>
+        <div class="section-sub">Admin → Reports — all reports have date range filters and CSV export</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">📊 Sales Report</div>
+          <div class="card-body">Total revenue, orders placed, average order value, discounts given. Bar chart of daily revenue. Use for monthly performance reviews.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">💰 Profit Report</div>
+          <div class="card-body">Revenue minus cost price = gross profit. Profit margin %. Requires <em>cost_price</em> on products. Shows most profitable products.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">🧾 GST Report</div>
+          <div class="card-body">Calculate GST collected by rate (5%, 12%, 18%, 28%). Shows CGST and SGST breakdown. Export for CA/accounting use.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">📦 Products Report</div>
+          <div class="card-body">Units sold per product, revenue contribution, average rating. Identify your best-sellers and slow movers.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">👥 Customers Report</div>
+          <div class="card-body">Orders per customer, total lifetime spend. Identify your top repeat customers for loyalty rewards.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">📋 Inventory Report</div>
+          <div class="card-body">Out of stock items, low stock alerts. Use before major sale events to ensure enough stock is available.</div>
+        </div>
+      </div>
+      <div class="info-box" style="margin-top:16px;">
+        <strong>📅 Monthly Routine:</strong> Run the Sales Report for the previous month on the 1st. Export GST Report quarterly for your accountant. Check Inventory Report before every sale event.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 14 — CUSTOMER: HOW TO SHOP
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch14"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 14</div>
+  <div class="chapter-title">How Customers Shop</div>
+  <div class="chapter-desc">The complete customer journey from homepage to checkout</div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🛍️</div>
+      <div>
+        <div class="section-title">Customer Shopping Flow</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="flow" style="flex-wrap:wrap;gap:4px;">
+        <div class="flow-box accent" style="font-size:11px;">Browse Home</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="font-size:11px;">View Category</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="font-size:11px;">Product Detail</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="font-size:11px;">Add to Cart</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box green" style="font-size:11px;">Checkout</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:#7c3aed;font-size:11px;">Pay</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box green" style="font-size:11px;">Order Confirmed</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🏠</div>
+      <div>
+        <div class="section-title">Homepage Sections</div>
+        <div class="section-sub">What customers see on the home page and what controls each section</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <table class="field-table">
+        <tr><th>Section</th><th>What Shows Here</th><th>Controlled By</th></tr>
+        <tr><td class="field-name">Hero Slider</td><td>Full-width banner images that rotate every 5 seconds</td><td>Admin → Banners (position: hero)</td></tr>
+        <tr><td class="field-name">Category Strip</td><td>Icon links to top-level categories</td><td>Admin → Categories (show_in_menu: ON)</td></tr>
+        <tr><td class="field-name">Featured Collections</td><td>Products marked as "Featured"</td><td>Product → Featured flag = ON</td></tr>
+        <tr><td class="field-name">New Arrivals</td><td>Recently added products marked "New Arrival"</td><td>Product → New Arrival flag = ON</td></tr>
+        <tr><td class="field-name">Best Sellers</td><td>Products marked as "Bestseller"</td><td>Product → Bestseller flag = ON</td></tr>
+        <tr><td class="field-name">Testimonials</td><td>Customer reviews carousel</td><td>Approved reviews in Admin → Reviews</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🛒</div>
+      <div>
+        <div class="section-title">Checkout Process (Customer View)</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Add to Cart</div>
+            <div class="step-desc">Customer selects size/color variant and clicks "Add to Cart". Cart icon shows count badge.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Apply Coupon (Optional)</div>
+            <div class="step-desc">In the cart page, customer enters a discount code. If valid, discount is applied to the order total.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Select Delivery Address</div>
+            <div class="step-desc">Customer picks a saved address or adds a new one. Shipping rate is calculated based on pincode.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Choose Payment Method</div>
+            <div class="step-desc"><strong>Online (Razorpay):</strong> Opens a popup for UPI, card, net banking, wallets. <strong>COD:</strong> Pay when delivered.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Order Confirmed</div>
+            <div class="step-desc">Customer sees order success page with order number. Order appears in Admin → Orders as "Pending".</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 15 — CUSTOMER ACCOUNT
+═══════════════════════════════════════════════ -->
+<div class="page-break" id="ch15"></div>
+<div class="chapter">
+  <div class="chapter-num">Chapter 15</div>
+  <div class="chapter-title">Customer Account &amp; Orders</div>
+  <div class="chapter-desc">How customers manage their account, track orders, and request returns</div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">👤</div>
+      <div>
+        <div class="section-title">Customer Account Features</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">📋 My Orders</div>
+          <div class="card-body">View all past and current orders. Track shipment status. Download invoice. Cancel order (before it's shipped).</div>
+        </div>
+        <div class="card">
+          <div class="card-title">👤 My Profile</div>
+          <div class="card-body">Update name, email, phone. Change password. Upload profile photo/avatar.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">📍 My Addresses</div>
+          <div class="card-body">Save multiple delivery addresses. Set a default address. Add, edit, or delete addresses.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">❤️ Wishlist</div>
+          <div class="card-body">Save products for later. Move wishlist items to cart. Share wishlist with friends.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">↩️ Returns</div>
+          <div class="card-body">Request a return for delivered orders. Upload photos of the item. Track return status.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">⭐ Reviews</div>
+          <div class="card-body">Rate and review purchased products. Upload photos with review. Reviews appear after admin approval.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🔍</div>
+      <div>
+        <div class="section-title">Pincode Checker</div>
+        <div class="section-sub">Customers verify delivery availability before ordering</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <p>On every product page, there's a pincode checker. The customer enters their pincode and sees:</p>
+      <ul class="checklist">
+        <li>Whether delivery is available to their area</li>
+        <li>Estimated delivery time (e.g., "5-7 business days")</li>
+        <li>Shipping charge for their zone</li>
+      </ul>
+      <div class="step-note">This is powered by your Shipping Zones configuration (Admin → Shipping). Make sure at least one shipping zone is active and set to cover all pincodes.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     QUICK REFERENCE
+═══════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<div class="chapter">
+  <div class="chapter-num">Quick Reference</div>
+  <div class="chapter-title">Cheat Sheet &amp; Common Tasks</div>
+  <div class="chapter-desc">The most common admin tasks with page locations</div>
+</div>
+
+<div class="container">
+  <div class="grid-2">
+    <div>
+      <div class="quick-ref">
+        <h4>Daily Tasks</h4>
+        <ul>
+          <li>Check new orders <span>Admin → Orders → New Orders tab</span></li>
+          <li>Update stock after delivery <span>Admin → Inventory</span></li>
+          <li>Approve pending reviews <span>Admin → Reviews → Pending</span></li>
+          <li>Process return requests <span>Admin → Returns → Pending</span></li>
+          <li>Check low stock alerts <span>Admin → Dashboard</span></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="quick-ref">
+        <h4>Weekly Tasks</h4>
+        <ul>
+          <li>Add new products <span>Admin → Products → + Add</span></li>
+          <li>Update banner for campaigns <span>Admin → Banners</span></li>
+          <li>Review sales performance <span>Admin → Reports → Sales</span></li>
+          <li>Check customer enquiries <span>Admin → Customers</span></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="quick-ref">
+        <h4>Catalog Setup Order</h4>
+        <ul>
+          <li>1. Create Level 1 categories <span>Admin → Categories</span></li>
+          <li>2. Create Level 2 children <span>Parent = Level 1</span></li>
+          <li>3. Create Level 3 sub-children <span>Parent = Level 2</span></li>
+          <li>4. Add products to correct category <span>Admin → Products</span></li>
+          <li>5. Upload product images <span>Product edit page</span></li>
+          <li>6. Set featured / new arrival flags <span>Product edit page</span></li>
+          <li>7. Add hero banner <span>Admin → Banners</span></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="quick-ref">
+        <h4>Common Troubleshooting</h4>
+        <ul>
+          <li>Banner not showing <span>Check Active toggle + Expiry date</span></li>
+          <li>Category not in nav <span>Check Show in Menu = ON</span></li>
+          <li>Product not visible <span>Check Status = Active</span></li>
+          <li>Out of stock not updating <span>Admin → Inventory → Edit stock</span></li>
+          <li>Coupon not working <span>Check expiry date + min order</span></li>
+          <li>Payment not going through <span>Check Razorpay keys in Settings</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🚀</div>
+      <div>
+        <div class="section-title">New Store Launch Checklist</div>
+        <div class="section-sub">Complete these steps before going live</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="grid-2">
+        <div>
+          <h4 class="mini-title">Catalog</h4>
+          <ul class="checklist">
+            <li>At least 3 parent categories created</li>
+            <li>Child categories created under each parent</li>
+            <li>Minimum 10 products added with images</li>
+            <li>All products marked Active</li>
+            <li>Featured and New Arrival flags set on key products</li>
+            <li>Stock levels entered for all variants</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="mini-title">Marketing</h4>
+          <ul class="checklist">
+            <li>At least 2 hero banners uploaded with good images</li>
+            <li>WELCOME10 coupon created (first order, 10% off)</li>
+            <li>Free shipping threshold set in a Shipping Zone</li>
+          </ul>
+          <h4 class="mini-title" style="margin-top:16px;">Configuration</h4>
+          <ul class="checklist">
+            <li>Store logo uploaded in Settings</li>
+            <li>Razorpay keys added (for online payment)</li>
+            <li>COD enabled or disabled as per preference</li>
+            <li>At least one Shipping Zone configured</li>
+            <li>Contact email set in Settings</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:48px;padding:32px;border-top:2px solid var(--border);color:var(--muted);font-size:12px;">
+    <div style="font-size:24px;font-weight:900;color:var(--primary);margin-bottom:4px;">Myeon Casuals <span style="color:var(--accent);">Fashion</span></div>
+    <div>Admin & User Guide — Version 1.0 — May 2026</div>
+    <div style="margin-top:8px;">For support or questions, contact your system administrator.</div>
+  </div>
+</div>
+
+<!-- Print Button (hidden in print) -->
+<div class="no-print" style="position:fixed;bottom:24px;right:24px;z-index:999;">
+  <button onclick="window.print()" style="background:#2D1B69;color:white;border:none;padding:14px 24px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+    🖨️ Print / Save as PDF
+  </button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+# laravel_public/.htaccess  (copy to the folder that holds Laravel's public/index.php)
+# This is the standard Laravel .htaccess with CORS headers added for API calls
+
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # CORS headers for API
+    <IfModule mod_headers.c>
+        Header always set Access-Control-Allow-Origin "https://yourdomain.com"
+        Header always set Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+        Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, X-XSRF-TOKEN"
+        Header always set Access-Control-Allow-Credentials "true"
+    </IfModule>
+
+    # Handle OPTIONS preflight
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^ - [R=204,L]
+
+    # Handle Authorization header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect trailing slashes
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send all requests to Laravel front controller
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>

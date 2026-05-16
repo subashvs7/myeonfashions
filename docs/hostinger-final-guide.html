@@ -1,0 +1,1062 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Hostinger Deployment Guide — Myeon Casuals</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#2D1B69;--accent:#F59E0B;--green:#10b981;--red:#ef4444;
+  --blue:#3b82f6;--text:#1a1a2e;--muted:#6b7280;--border:#e5e7eb;
+  --bg:#f8f7ff;--white:#fff;--code-bg:#1e1e2e;--code-text:#cdd6f4;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6;color:var(--text);background:var(--white)}
+@media print{
+  .no-print{display:none!important}
+  .page-break{page-break-before:always}
+  a{color:inherit;text-decoration:none}
+  .card{break-inside:avoid}
+  .section{break-inside:avoid}
+}
+
+/* Cover */
+.cover{background:linear-gradient(135deg,var(--primary) 0%,#4c1d95 60%,#7c3aed 100%);color:white;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 40px;page-break-after:always}
+.cover-logo{font-size:44px;font-weight:900;letter-spacing:-1px;margin-bottom:4px}
+.cover-logo span{color:var(--accent)}
+.cover-domain{font-size:18px;font-weight:300;opacity:.7;margin-bottom:48px;letter-spacing:2px}
+.cover-title{font-size:38px;font-weight:700;line-height:1.2;margin-bottom:12px}
+.cover-sub{font-size:15px;opacity:.8;max-width:520px;margin-bottom:48px}
+.cover-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:48px}
+.pill{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:6px 16px;border-radius:20px;font-size:12px}
+.cover-meta{font-size:12px;opacity:.6;display:flex;gap:32px}
+
+/* Wrap */
+.wrap{max-width:900px;margin:0 auto;padding:40px 48px}
+
+/* Phase Banner */
+.phase{display:flex;align-items:center;gap:16px;background:var(--primary);color:white;padding:20px 32px;margin-bottom:0;border-radius:8px 8px 0 0}
+.phase-num{font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:.6}
+.phase-title{font-size:22px;font-weight:700}
+.phase-desc{font-size:13px;opacity:.8;margin-top:2px}
+.phase-icon{font-size:28px;opacity:.8}
+
+/* Section */
+.section{background:var(--white);border:1px solid var(--border);border-radius:8px;margin:24px 0;overflow:hidden}
+.section-head{background:var(--bg);padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.section-num{width:28px;height:28px;background:var(--primary);color:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.section-title{font-size:16px;font-weight:700;color:var(--primary)}
+.section-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.section-body{padding:20px}
+
+/* Steps */
+.steps{counter-reset:step}
+.step{display:flex;gap:14px;margin-bottom:16px;counter-increment:step}
+.step-num{flex-shrink:0;width:26px;height:26px;background:var(--accent);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.step-num::before{content:counter(step)}
+.step-content{flex:1;padding-top:2px}
+.step-title{font-weight:700;font-size:14px;margin-bottom:3px}
+.step-desc{font-size:13px;color:#374151;line-height:1.6}
+
+/* Alerts */
+.note{background:#fffbeb;border-left:3px solid var(--accent);padding:8px 12px;margin-top:8px;font-size:12px;color:#92400e;border-radius:0 4px 4px 0}
+.tip{background:#f0fdf4;border-left:3px solid var(--green);padding:8px 12px;margin-top:8px;font-size:12px;color:#065f46;border-radius:0 4px 4px 0}
+.warn{background:#fef2f2;border-left:3px solid var(--red);padding:8px 12px;margin-top:8px;font-size:12px;color:#991b1b;border-radius:0 4px 4px 0}
+.alert{border-radius:8px;padding:14px 18px;margin:14px 0;font-size:13px}
+.alert-blue{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.alert-green{background:#f0fdf4;border:1px solid #bbf7d0;color:#065f46}
+.alert-yellow{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+.alert-red{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.alert strong{display:block;margin-bottom:4px}
+
+/* Code */
+.code{background:var(--code-bg);color:var(--code-text);padding:16px 18px;border-radius:6px;font-family:'Courier New',monospace;font-size:12px;margin:10px 0;overflow-x:auto;line-height:2;white-space:pre}
+.code .c{color:#6272a4}
+.code .g{color:#50fa7b}
+.code .y{color:#f1fa8c}
+.code .b{color:#8be9fd}
+.code .r{color:#ff5555}
+.code .p{color:#ff79c6}
+.inline{font-family:monospace;font-size:12px;background:var(--bg);border:1px solid var(--border);padding:1px 5px;border-radius:3px;color:#6d28d9}
+
+/* File tree */
+.tree{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:20px 24px;font-family:'Courier New',monospace;font-size:12.5px;line-height:2;margin:12px 0}
+.tree .g{color:#4ade80}
+.tree .b{color:#60a5fa}
+.tree .y{color:#fbbf24}
+.tree .m{color:#64748b}
+.tree .r{color:#f87171}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+.tbl th{background:var(--bg);padding:8px 12px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:2px solid var(--border)}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#fafafa}
+.fname{font-weight:700;color:var(--primary);font-family:monospace}
+
+/* Badges */
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.bg{background:#d1fae5;color:#065f46}
+.br{background:#fee2e2;color:#991b1b}
+.by{background:#fef3c7;color:#92400e}
+.bb{background:#dbeafe;color:#1e40af}
+.bp{background:#ede9fe;color:#5b21b6}
+
+/* Grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:12px 0}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px}
+.card-title{font-weight:700;font-size:13px;color:var(--primary);margin-bottom:6px}
+.card-body{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* Checklist */
+.cl{list-style:none;margin:8px 0}
+.cl li{padding:6px 0;font-size:13px;display:flex;align-items:flex-start;gap:10px;border-bottom:1px solid var(--border)}
+.cl li:last-child{border-bottom:none}
+.cl li::before{content:'☐';color:var(--muted);flex-shrink:0;font-size:16px;line-height:1.4}
+
+/* Misc */
+hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+h3{font-size:17px;color:var(--primary);margin:24px 0 12px;border-left:4px solid var(--accent);padding-left:10px}
+h4{font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--text)}
+p{font-size:13px;color:#374151;line-height:1.7;margin-bottom:8px}
+
+/* Print button */
+.print-btn{position:fixed;bottom:28px;right:28px;background:var(--primary);color:white;border:none;padding:14px 22px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(45,27,105,.4);z-index:999}
+.print-btn:hover{background:#3d2490}
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">⬇ Save as PDF</button>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">Myeon Casuals <span>Fashion</span></div>
+  <div class="cover-domain">myeoncasuals.com</div>
+  <div class="cover-title">Hostinger Shared Hosting<br>Deployment Guide</div>
+  <div class="cover-sub">Complete step-by-step guide to deploy the Laravel + React e-commerce platform on Hostinger shared hosting. Based on a live deployment session.</div>
+  <div class="cover-pills">
+    <span class="pill">Laravel 12</span>
+    <span class="pill">React 19 + Vite</span>
+    <span class="pill">MySQL</span>
+    <span class="pill">Hostinger hPanel</span>
+    <span class="pill">Apache + .htaccess</span>
+    <span class="pill">PWA</span>
+  </div>
+  <div class="cover-meta">
+    <span>Version 2.0</span>
+    <span>May 2026</span>
+    <span>Verified &amp; Working</span>
+  </div>
+</div>
+
+<!-- PAGE 1: OVERVIEW -->
+<div class="wrap">
+
+  <h3>Project Architecture</h3>
+  <p>This project is a decoupled Laravel API backend + React SPA frontend hosted together on a single Hostinger shared hosting account. Everything lives inside <span class="inline">public_html/</span> — the Laravel folder is renamed to <span class="inline">api/</span> and the React build files go directly in <span class="inline">public_html/</span>.</p>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">📁</div>
+      <div>
+        <div class="section-title">Final Folder Structure on Hostinger</div>
+        <div class="section-sub">The exact layout that works — verify yours matches this</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="tree">
+<span class="b">~/domains/myeoncasuals.com/</span>
+└── <span class="b">public_html/</span>                 <span class="m">← web root (Apache document root)</span>
+    │
+    ├── <span class="y">api/</span>                         <span class="m">← your laravel/ folder, renamed to api/</span>
+    │   ├── app/
+    │   ├── bootstrap/
+    │   ├── config/
+    │   ├── database/
+    │   ├── routes/
+    │   ├── storage/
+    │   ├── vendor/
+    │   ├── artisan
+    │   └── <span class="g">.env</span>                     <span class="m">← FILL IN production values</span>
+    │
+    ├── <span class="b">assets/</span>                      <span class="m">← from frontend/dist/assets/</span>
+    ├── <span class="g">index.html</span>                   <span class="m">← from frontend/dist/index.html (React SPA)</span>
+    ├── <span class="g">index.php</span>                    <span class="m">← from deploy/index.php  ← CRITICAL</span>
+    ├── <span class="g">sw.js</span>                        <span class="m">← from frontend/dist/sw.js (PWA service worker)</span>
+    ├── <span class="g">workbox-*.js</span>                 <span class="m">← from frontend/dist/</span>
+    ├── <span class="g">manifest.webmanifest</span>         <span class="m">← from frontend/dist/</span>
+    ├── <span class="g">favicon.ico</span>                  <span class="m">← from frontend/dist/</span>
+    ├── <span class="g">.htaccess</span>                    <span class="m">← from deploy/public_html.htaccess  ← CRITICAL</span>
+    └── <span class="g">storage</span> <span class="r">→ symlink</span>            <span class="m">← api/storage/app/public (created via SSH)</span>
+      </div>
+      <div class="warn">⚠ The actual Hostinger home path is <strong>~/domains/myeoncasuals.com/public_html/</strong> — NOT ~/public_html/. This distinction caused issues during initial setup.</div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">Backend</div>
+      <div class="card-body">Laravel 12 · PHP 8.2+ · MySQL · Sanctum Auth · Razorpay · Spatie Media</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Frontend</div>
+      <div class="card-body">React 19 · Vite · Tailwind CSS · Zustand · TanStack Query · PWA</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Hosting</div>
+      <div class="card-body">Hostinger Shared · hPanel · Apache · MySQL · SSH access</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 2: PRE-REQUISITES -->
+<div class="wrap page-break">
+
+  <h3>Before You Start — Pre-requisites</h3>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">✅</div>
+      <div>
+        <div class="section-title">Hostinger Account Setup</div>
+        <div class="section-sub">Complete these in hPanel before running any commands</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <table class="tbl">
+        <thead><tr><th>Task</th><th>Where in hPanel</th><th>What to note down</th></tr></thead>
+        <tbody>
+          <tr><td>Create MySQL Database</td><td>Databases → MySQL Databases</td><td>Database name, username, password</td></tr>
+          <tr><td>Enable SSH Access</td><td>Advanced → SSH Access</td><td>Host, port (usually 22), username</td></tr>
+          <tr><td>Create Email Account</td><td>Emails → Email Accounts</td><td>noreply@myeoncasuals.com + password</td></tr>
+          <tr><td>Point domain DNS</td><td>Domains → DNS Zone</td><td>A record pointing to Hostinger IP</td></tr>
+          <tr><td>Enable SSL (HTTPS)</td><td>Security → SSL</td><td>Enable free Let's Encrypt SSL</td></tr>
+        </tbody>
+      </table>
+      <div class="tip">✓ Note down your MySQL database name — it will be in the format <strong>u797380248_yourname</strong> (starts with your account ID).</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">🔑</div>
+      <div>
+        <div class="section-title">External Credentials Needed</div>
+        <div class="section-sub">Gather these before filling in .env</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="g2">
+        <div class="card">
+          <div class="card-title">Razorpay Live Keys</div>
+          <div class="card-body">Login to razorpay.com → Settings → API Keys → Generate Live Key. You need:<br><br>• Key ID: <span style="font-family:monospace">rzp_live_XXXXX</span><br>• Key Secret: long string</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Hostinger SMTP</div>
+          <div class="card-body">Already configured if you created the email:<br><br>• Host: smtp.hostinger.com<br>• Port: 587<br>• User: noreply@myeoncasuals.com<br>• Pass: your email password</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 3: STEP 1 - ENV FILE -->
+<div class="wrap page-break">
+
+  <div class="phase">
+    <div class="phase-icon">⚙️</div>
+    <div>
+      <div class="phase-num">Phase 1 of 5</div>
+      <div class="phase-title">Configure the .env File</div>
+      <div class="phase-desc">The only file you edit before uploading</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">1</div>
+      <div>
+        <div class="section-title">Edit <span style="font-family:monospace">laravel/.env</span></div>
+        <div class="section-sub">Replace local dev values with production values</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <p>Open <span class="inline">laravel/.env</span> in your code editor and change these values:</p>
+      <div class="code"><span class="c"># ── App ──────────────────────────────────────────────</span>
+<span class="g">APP_NAME</span>=<span class="y">"Myeon Casuals"</span>
+<span class="g">APP_ENV</span>=<span class="y">production</span>
+<span class="g">APP_KEY</span>=                        <span class="c"># Leave blank — generated on server</span>
+<span class="g">APP_DEBUG</span>=<span class="y">false</span>
+<span class="g">APP_URL</span>=<span class="y">https://myeoncasuals.com</span>
+
+<span class="g">FRONTEND_URL</span>=<span class="y">https://myeoncasuals.com</span>
+
+<span class="c"># ── Database ─────────────────────────────────────────</span>
+<span class="g">DB_CONNECTION</span>=<span class="y">mysql</span>
+<span class="g">DB_HOST</span>=<span class="y">localhost</span>
+<span class="g">DB_PORT</span>=<span class="y">3306</span>
+<span class="g">DB_DATABASE</span>=<span class="y">u797380248_dfashions</span>   <span class="c"># your MySQL DB name</span>
+<span class="g">DB_USERNAME</span>=<span class="y">u797380248_user</span>         <span class="c"># your MySQL username</span>
+<span class="g">DB_PASSWORD</span>=<span class="y">YourStrongPassword</span>
+
+<span class="c"># ── Session / Cache / Queue ───────────────────────────</span>
+<span class="g">SESSION_DRIVER</span>=<span class="y">file</span>
+<span class="g">SESSION_DOMAIN</span>=<span class="y">myeoncasuals.com</span>
+<span class="g">SESSION_SECURE_COOKIE</span>=<span class="y">true</span>
+<span class="g">CACHE_STORE</span>=<span class="y">file</span>
+<span class="g">QUEUE_CONNECTION</span>=<span class="y">sync</span>
+<span class="g">FILESYSTEM_DISK</span>=<span class="y">public</span>
+
+<span class="c"># ── Razorpay Live Keys ────────────────────────────────</span>
+<span class="g">RAZORPAY_KEY_ID</span>=<span class="y">rzp_live_XXXXXXXXXX</span>
+<span class="g">RAZORPAY_KEY_SECRET</span>=<span class="y">XXXXXXXXXXXXXXXXXX</span>
+
+<span class="c"># ── Mail (Hostinger SMTP) ─────────────────────────────</span>
+<span class="g">MAIL_MAILER</span>=<span class="y">smtp</span>
+<span class="g">MAIL_HOST</span>=<span class="y">smtp.hostinger.com</span>
+<span class="g">MAIL_PORT</span>=<span class="y">587</span>
+<span class="g">MAIL_USERNAME</span>=<span class="y">noreply@myeoncasuals.com</span>
+<span class="g">MAIL_PASSWORD</span>=<span class="y">YourEmailPassword</span>
+<span class="g">MAIL_ENCRYPTION</span>=<span class="y">tls</span>
+<span class="g">MAIL_FROM_ADDRESS</span>=<span class="y">noreply@myeoncasuals.com</span>
+<span class="g">MAIL_FROM_NAME</span>=<span class="y">"Myeon Casuals"</span>
+
+<span class="c"># ── Sanctum ───────────────────────────────────────────</span>
+<span class="g">SANCTUM_STATEFUL_DOMAINS</span>=<span class="y">myeoncasuals.com</span>
+
+<span class="c"># ── Logging ───────────────────────────────────────────</span>
+<span class="g">LOG_CHANNEL</span>=<span class="y">single</span>
+<span class="g">LOG_LEVEL</span>=<span class="y">error</span></div>
+      <div class="warn">⚠ Remove all test/local values: <strong>DB_USERNAME=root, DB_PASSWORD= (empty), APP_DEBUG=true, MAIL_MAILER=log</strong>. These must not be in production.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 4: BUILD FRONTEND -->
+<div class="wrap page-break">
+
+  <div class="phase">
+    <div class="phase-icon">🔨</div>
+    <div>
+      <div class="phase-num">Phase 2 of 5</div>
+      <div class="phase-title">Build the React Frontend</div>
+      <div class="phase-desc">Run locally on your computer before uploading</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">2</div>
+      <div>
+        <div class="section-title">Build Frontend (Run on Your PC)</div>
+        <div class="section-sub">Creates the frontend/dist/ folder with all compiled files</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="code"><span class="c"># Navigate to frontend folder</span>
+<span class="g">cd</span> frontend
+
+<span class="c"># Install dependencies (first time only)</span>
+<span class="g">npm</span> install
+
+<span class="c"># Build for production</span>
+<span class="g">npm</span> run build</div>
+      <p>This creates <span class="inline">frontend/dist/</span> containing:</p>
+      <div class="g2">
+        <div class="card">
+          <div class="card-title">Files to upload from dist/</div>
+          <div class="card-body">
+            ✓ index.html<br>
+            ✓ assets/ (folder)<br>
+            ✓ sw.js<br>
+            ✓ workbox-*.js<br>
+            ✓ manifest.webmanifest<br>
+            ✓ favicon.ico, favicon.svg<br>
+            ✓ pwa-*.png icons<br>
+            ✓ maskable-icon-*.png
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Where they go on Hostinger</div>
+          <div class="card-body">All dist/ contents go directly into:<br><br><span style="font-family:monospace;font-size:11px">~/domains/myeoncasuals.com/<br>public_html/</span><br><br>(Not inside a subfolder)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 5: UPLOAD FILES -->
+<div class="wrap page-break">
+
+  <div class="phase">
+    <div class="phase-icon">📤</div>
+    <div>
+      <div class="phase-num">Phase 3 of 5</div>
+      <div class="phase-title">Upload Files to Hostinger</div>
+      <div class="phase-desc">Use hPanel File Manager or FTP (FileZilla)</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">3</div>
+      <div>
+        <div class="section-title">What to Upload and Where</div>
+        <div class="section-sub">Follow this table exactly — wrong placement = 404 errors</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <table class="tbl">
+        <thead><tr><th>Local File / Folder</th><th>Upload To (on Hostinger)</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="fname">laravel/ (entire folder)</td>
+            <td><span class="inline">public_html/api/</span></td>
+            <td><span class="badge by">Rename</span> Rename the folder from <strong>laravel</strong> to <strong>api</strong> when uploading</td>
+          </tr>
+          <tr>
+            <td class="fname">deploy/index.php</td>
+            <td><span class="inline">public_html/index.php</span></td>
+            <td><span class="badge br">Critical</span> This is NOT Laravel's default index.php — use the one from deploy/</td>
+          </tr>
+          <tr>
+            <td class="fname">deploy/public_html.htaccess</td>
+            <td><span class="inline">public_html/.htaccess</span></td>
+            <td><span class="badge br">Critical</span> Upload as <strong>.htaccess</strong> (with the dot prefix)</td>
+          </tr>
+          <tr>
+            <td class="fname">frontend/dist/index.html</td>
+            <td><span class="inline">public_html/index.html</span></td>
+            <td>React SPA entry point</td>
+          </tr>
+          <tr>
+            <td class="fname">frontend/dist/assets/</td>
+            <td><span class="inline">public_html/assets/</span></td>
+            <td>All JS, CSS compiled bundles</td>
+          </tr>
+          <tr>
+            <td class="fname">frontend/dist/sw.js</td>
+            <td><span class="inline">public_html/sw.js</span></td>
+            <td>PWA service worker</td>
+          </tr>
+          <tr>
+            <td class="fname">frontend/dist/workbox-*.js</td>
+            <td><span class="inline">public_html/workbox-*.js</span></td>
+            <td>PWA workbox runtime</td>
+          </tr>
+          <tr>
+            <td class="fname">frontend/dist/manifest.webmanifest</td>
+            <td><span class="inline">public_html/manifest.webmanifest</span></td>
+            <td>PWA manifest</td>
+          </tr>
+          <tr>
+            <td class="fname">frontend/dist/*.png, *.ico, *.svg</td>
+            <td><span class="inline">public_html/</span></td>
+            <td>App icons (favicon, PWA icons)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-red">
+        <strong>⛔ Do NOT upload</strong>
+        <ul style="margin-top:6px;padding-left:18px;font-size:13px">
+          <li>Do not upload <span class="inline">laravel/public/</span> separately — it's unused in this setup</li>
+          <li>Do not upload <span class="inline">node_modules/</span></li>
+          <li>Do not put Laravel files directly in <span class="inline">public_html/</span> root (only api/ subfolder)</li>
+        </ul>
+      </div>
+
+      <div class="tip">✓ <strong>Tip:</strong> Use hPanel File Manager → Upload → ZIP file for faster uploads. Zip the entire <span class="inline">laravel/</span> folder first, upload the zip, then extract it inside public_html/ and rename the extracted folder to <span class="inline">api/</span>.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 6: KEY FILES CONTENT -->
+<div class="wrap page-break">
+
+  <div class="phase">
+    <div class="phase-icon">📄</div>
+    <div>
+      <div class="phase-num">Phase 3 — Detail</div>
+      <div class="phase-title">Critical File Contents</div>
+      <div class="phase-desc">Exact content for index.php and .htaccess — can also be created directly on SSH</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">A</div>
+      <div>
+        <div class="section-title">public_html/index.php</div>
+        <div class="section-sub">Bootstraps Laravel from the api/ folder — custom entry point</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="code">&lt;?php
+<span class="p">use</span> Illuminate\Foundation\Application;
+<span class="p">use</span> Illuminate\Http\Request;
+
+<span class="g">define</span>(<span class="y">'LARAVEL_START'</span>, microtime(<span class="y">true</span>));
+
+<span class="c">// Laravel is in api/ folder inside public_html</span>
+<span class="b">$laravel</span> = __DIR__ . <span class="y">'/api'</span>;
+
+<span class="p">if</span> (file_exists(<span class="b">$maintenance</span> = <span class="b">$laravel</span> . <span class="y">'/storage/framework/maintenance.php'</span>)) {
+    require <span class="b">$maintenance</span>;
+}
+
+require <span class="b">$laravel</span> . <span class="y">'/vendor/autoload.php'</span>;
+
+<span class="b">$app</span> = require_once <span class="b">$laravel</span> . <span class="y">'/bootstrap/app.php'</span>;
+
+<span class="b">$app</span>->handleRequest(Request::capture());</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">B</div>
+      <div>
+        <div class="section-title">public_html/.htaccess</div>
+        <div class="section-sub">Routes /api/* to Laravel, everything else to React SPA</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="code">Options -Indexes
+Options +FollowSymLinks
+
+<span class="c"># Block sensitive files</span>
+&lt;FilesMatch "\.(env|log|json|lock|sh|sql)$"&gt;
+    Require all denied
+&lt;/FilesMatch&gt;
+
+&lt;IfModule mod_rewrite.c&gt;
+    RewriteEngine On
+    RewriteBase /
+    DirectoryIndex index.html index.php
+
+    <span class="c"># Pass Authorization header to Laravel</span>
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    <span class="c"># Handle OPTIONS preflight (CORS)</span>
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^ - [R=204,L]
+
+    <span class="c"># IMPORTANT: Route /api/* to Laravel BEFORE the real-file check</span>
+    <span class="c"># (api/ folder exists as a real directory, so this MUST come first)</span>
+    <span class="g">RewriteRule ^api/     index.php [QSA,L]</span>
+    <span class="g">RewriteRule ^sanctum/ index.php [QSA,L]</span>
+
+    <span class="c"># Let real files/dirs pass (assets/, storage/, sw.js, icons, etc.)</span>
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    <span class="c"># Everything else → React SPA (client-side routing)</span>
+    <span class="g">RewriteRule ^ index.html [L]</span>
+&lt;/IfModule&gt;</div>
+      <div class="warn">⚠ The <strong>/api/* routing MUST come before the real-file check</strong>. If reversed, Apache sees the api/ directory as a real path and bypasses Laravel entirely — causing all API calls to return 404.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 7: SSH SETUP -->
+<div class="wrap page-break">
+
+  <div class="phase">
+    <div class="phase-icon">🖥️</div>
+    <div>
+      <div class="phase-num">Phase 4 of 5</div>
+      <div class="phase-title">SSH Setup Commands</div>
+      <div class="phase-desc">Run once via SSH after uploading all files</div>
+    </div>
+  </div>
+
+  <div class="alert alert-blue">
+    <strong>SSH Connection</strong>
+    Connect via terminal: <span class="inline">ssh u797380248@in-mum-web948.main-hosting.eu -p 22</span> — or use hPanel → Advanced → SSH Access → Launch Terminal.
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">4A</div>
+      <div>
+        <div class="section-title">Navigate to the api/ directory</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="code"><span class="c"># The REAL path on Hostinger — not ~/public_html !</span>
+cd ~/domains/myeoncasuals.com/public_html/api</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">4B</div>
+      <div>
+        <div class="section-title">Set Permissions</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="code"><span class="c"># Run from inside api/ directory</span>
+chmod -R 755 storage
+chmod -R 755 bootstrap/cache</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">4C</div>
+      <div>
+        <div class="section-title">Create Storage Symlink</div>
+        <div class="section-sub">Links public_html/storage/ → api/storage/app/public/ for uploaded images</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="code"><span class="c"># Use variables to avoid typos</span>
+APIPATH=$(pwd)
+PUBPATH=$(dirname "$APIPATH")
+ln -s "$APIPATH/storage/app/public" "$PUBPATH/storage"
+
+<span class="c"># Verify the symlink was created</span>
+ls -la "$PUBPATH/storage"</div>
+      <div class="tip">✓ If you see <span class="inline">storage -> /home/.../api/storage/app/public</span> it worked. If it says "File exists", the symlink was already created — that's fine.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">4D</div>
+      <div>
+        <div class="section-title">Generate App Key + Run Migrations + Seed</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="code"><span class="c"># Generate encryption key</span>
+php artisan key:generate --force
+
+<span class="c"># Run all database migrations</span>
+php artisan migrate --force
+
+<span class="c"># Seed admin user, settings, and shipping zones</span>
+php artisan db:seed --class=ProductionSeeder --force</div>
+      <div class="tip">✓ After seeding: <strong>Admin login</strong> → admin@myeoncasuals.com / Admin@1234 — change this password immediately after first login.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">4E</div>
+      <div>
+        <div class="section-title">Build Caches</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="code">php artisan config:cache && php artisan route:cache && php artisan view:cache</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 8: CREATE FILES VIA SSH (Alternative) -->
+<div class="wrap page-break">
+
+  <div class="phase">
+    <div class="phase-icon">⚡</div>
+    <div>
+      <div class="phase-num">Phase 4 — Alternative</div>
+      <div class="phase-title">Create index.php &amp; .htaccess via SSH</div>
+      <div class="phase-desc">Faster than uploading — paste directly into SSH terminal</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">!</div>
+      <div>
+        <div class="section-title">If index.php or .htaccess are missing</div>
+        <div class="section-sub">Create them directly on the server — no file upload needed</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <h4>Create index.php via SSH</h4>
+      <div class="code">cat &gt; ~/domains/myeoncasuals.com/public_html/index.php &lt;&lt; 'EOF'
+&lt;?php
+use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
+define('LARAVEL_START', microtime(true));
+$laravel = __DIR__ . '/api';
+if (file_exists($maintenance = $laravel . '/storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+require $laravel . '/vendor/autoload.php';
+$app = require_once $laravel . '/bootstrap/app.php';
+$app-&gt;handleRequest(Request::capture());
+EOF</div>
+
+      <h4>Create .htaccess via SSH</h4>
+      <div class="code">cat &gt; ~/domains/myeoncasuals.com/public_html/.htaccess &lt;&lt; 'EOF'
+Options -Indexes
+Options +FollowSymLinks
+&lt;FilesMatch "\.(env|log|json|lock|sh|sql)$"&gt;
+    Require all denied
+&lt;/FilesMatch&gt;
+&lt;IfModule mod_rewrite.c&gt;
+    RewriteEngine On
+    RewriteBase /
+    DirectoryIndex index.html index.php
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^ - [R=204,L]
+    RewriteRule ^api/     index.php [QSA,L]
+    RewriteRule ^sanctum/ index.php [QSA,L]
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    RewriteRule ^ index.html [L]
+&lt;/IfModule&gt;
+EOF</div>
+
+      <h4>Verify both files exist</h4>
+      <div class="code">ls -la ~/domains/myeoncasuals.com/public_html/index.php
+ls -la ~/domains/myeoncasuals.com/public_html/.htaccess</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 9: VERIFICATION -->
+<div class="wrap page-break">
+
+  <div class="phase">
+    <div class="phase-icon">✅</div>
+    <div>
+      <div class="phase-num">Phase 5 of 5</div>
+      <div class="phase-title">Verify &amp; Test</div>
+      <div class="phase-desc">Confirm everything is working before going live</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">5</div>
+      <div>
+        <div class="section-title">SSH Verification Commands</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="code"><span class="c"># 1. Confirm all critical files exist</span>
+ls -la ~/domains/myeoncasuals.com/public_html/index.php
+ls -la ~/domains/myeoncasuals.com/public_html/.htaccess
+ls -la ~/domains/myeoncasuals.com/public_html/index.html
+ls -la ~/domains/myeoncasuals.com/public_html/storage
+
+<span class="c"># 2. Test Laravel boots without errors</span>
+cd ~/domains/myeoncasuals.com/public_html/api
+php -r <span class="y">"require 'vendor/autoload.php'; \$app = require 'bootstrap/app.php'; echo 'OK';"</span>
+
+<span class="c"># 3. Test the API returns JSON (should NOT be 404)</span>
+curl -s https://myeoncasuals.com/api/categories
+
+<span class="c"># 4. Check Laravel error log if something fails</span>
+tail -50 storage/logs/laravel.log</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">5B</div>
+      <div>
+        <div class="section-title">Browser Testing Checklist</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <ul class="cl">
+        <li>Homepage loads at https://myeoncasuals.com</li>
+        <li>Products and categories appear (API calls return data)</li>
+        <li>Login works at /login</li>
+        <li>Admin panel accessible at /admin after login as admin@myeoncasuals.com</li>
+        <li>Product images load (storage symlink working)</li>
+        <li>Direct URL navigation works (e.g. refresh on /products page)</li>
+        <li>PWA install prompt appears on mobile</li>
+        <li>HTTPS padlock shown (SSL active)</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 10: TROUBLESHOOTING -->
+<div class="wrap page-break">
+
+  <h3>Known Issues &amp; Fixes (From Live Deployment)</h3>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">🐛</div>
+      <div>
+        <div class="section-title">Issue 1 — All /api/* calls return 404</div>
+        <div class="section-sub">The most common issue — Laravel is not being reached</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <p><strong>Cause A:</strong> <span class="inline">index.php</span> or <span class="inline">.htaccess</span> missing from public_html/</p>
+      <div class="code"><span class="c"># Diagnose</span>
+ls -la ~/domains/myeoncasuals.com/public_html/index.php
+ls -la ~/domains/myeoncasuals.com/public_html/.htaccess
+
+<span class="c"># Fix: create them using the SSH commands on the previous page</span></div>
+
+      <p><strong>Cause B:</strong> .htaccess has wrong rule order — /api/ file check runs before routing</p>
+      <div class="code"><span class="c"># Diagnose: check the order in .htaccess</span>
+grep -n "api/" ~/domains/myeoncasuals.com/public_html/.htaccess
+<span class="c"># The line with "RewriteRule ^api/" must have a LOWER line number than</span>
+<span class="c"># the line with "RewriteCond %{REQUEST_FILENAME} -f"</span></div>
+
+      <p><strong>Cause C:</strong> Wrong path in index.php</p>
+      <div class="code">head -10 ~/domains/myeoncasuals.com/public_html/index.php
+<span class="c"># Must show: $laravel = __DIR__ . '/api';  (NOT '/../laravel')</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">🐛</div>
+      <div>
+        <div class="section-title">Issue 2 — Seeder fails: "Data truncated for column estimated_days"</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <p>The <span class="inline">estimated_days</span> column in <span class="inline">shipping_zones</span> is an <strong>integer</strong>, but the seeder passed a string <span class="inline">'5-7'</span>.</p>
+      <div class="code"><span class="c"># Fix the file directly on server</span>
+sed -i <span class="y">"s/'estimated_days'  => '5-7'/'estimated_days'  => 7/"</span> \
+  ~/domains/myeoncasuals.com/public_html/api/database/seeders/ProductionSeeder.php
+
+<span class="c"># Verify the fix</span>
+grep estimated_days ~/domains/myeoncasuals.com/public_html/api/database/seeders/ProductionSeeder.php
+
+<span class="c"># Re-run seeder (safe — uses firstOrCreate, no duplicates)</span>
+cd ~/domains/myeoncasuals.com/public_html/api
+php artisan db:seed --class=ProductionSeeder --force</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">🐛</div>
+      <div>
+        <div class="section-title">Issue 3 — Storage symlink fails "No such file or directory"</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <p>The Hostinger home directory path is <span class="inline">~/domains/myeoncasuals.com/</span> — NOT <span class="inline">~/public_html/</span>. Using the wrong path causes the symlink to fail.</p>
+      <div class="code"><span class="c"># Always use pwd-based variables to get the correct path</span>
+cd ~/domains/myeoncasuals.com/public_html/api
+APIPATH=$(pwd)
+PUBPATH=$(dirname "$APIPATH")
+ln -s "$APIPATH/storage/app/public" "$PUBPATH/storage"
+
+<span class="c"># Verify</span>
+ls -la "$PUBPATH/storage"</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">🐛</div>
+      <div>
+        <div class="section-title">Issue 4 — chmod fails "No such file or directory"</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <p>Using absolute paths like <span class="inline">~/public_html/api/storage</span> fails. Use relative paths from inside the api/ directory instead.</p>
+      <div class="code"><span class="c"># Navigate first, then use relative paths</span>
+cd ~/domains/myeoncasuals.com/public_html/api
+chmod -R 755 storage
+chmod -R 755 bootstrap/cache</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE 11: POST-DEPLOYMENT -->
+<div class="wrap page-break">
+
+  <h3>Post-Deployment Tasks</h3>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">🔐</div>
+      <div>
+        <div class="section-title">Security — Do Immediately After Going Live</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Change admin password</div>
+            <div class="step-desc">Login at <span class="inline">myeoncasuals.com/login</span> with <span class="inline">admin@myeoncasuals.com / Admin@1234</span> → go to profile → change password immediately.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Confirm APP_DEBUG is false</div>
+            <div class="step-desc">Run <span class="inline">php artisan config:cache</span> after verifying <span class="inline">APP_DEBUG=false</span> in .env. Never enable debug in production.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Switch Razorpay to live mode</div>
+            <div class="step-desc">Confirm you are using <span class="inline">rzp_live_</span> keys (not <span class="inline">rzp_test_</span>). Check Razorpay dashboard is set to live mode.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-content">
+            <div class="step-title">Test a real payment end-to-end</div>
+            <div class="step-desc">Place a small ₹1 test order using a real card to confirm Razorpay live keys are working and order status updates correctly.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">🔄</div>
+      <div>
+        <div class="section-title">How to Update the Site</div>
+        <div class="section-sub">For future code changes</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <table class="tbl">
+        <thead><tr><th>Changed</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr><td>React frontend code</td><td>Run <span class="inline">npm run build</span> locally → upload new <span class="inline">dist/assets/</span> + <span class="inline">dist/index.html</span></td></tr>
+          <tr><td>Laravel PHP code</td><td>Upload changed files to <span class="inline">api/</span> → run <span class="inline">php artisan config:cache</span></td></tr>
+          <tr><td>Database migrations</td><td>Upload migration file → run <span class="inline">php artisan migrate --force</span> via SSH</td></tr>
+          <tr><td>.env values</td><td>Edit <span class="inline">api/.env</span> via File Manager → run <span class="inline">php artisan config:cache</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-num">📋</div>
+      <div>
+        <div class="section-title">Quick Reference — Useful SSH Commands</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="code"><span class="c"># Always cd here first</span>
+cd ~/domains/myeoncasuals.com/public_html/api
+
+<span class="c"># Clear all caches</span>
+php artisan cache:clear && php artisan config:clear && php artisan route:clear && php artisan view:clear
+
+<span class="c"># Rebuild all caches</span>
+php artisan config:cache && php artisan route:cache && php artisan view:cache
+
+<span class="c"># Check logs</span>
+tail -50 storage/logs/laravel.log
+
+<span class="c"># Run new migrations</span>
+php artisan migrate --force
+
+<span class="c"># List all registered routes (for debugging)</span>
+php artisan route:list | grep api
+
+<span class="c"># Test Laravel boots</span>
+php -r "require 'vendor/autoload.php'; \$app = require 'bootstrap/app.php'; echo 'OK';"
+
+<span class="c"># Test API is reachable</span>
+curl -s https://myeoncasuals.com/api/categories | head -c 200</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FINAL CHECKLIST -->
+<div class="wrap page-break">
+  <h3>Final Deployment Checklist</h3>
+
+  <div class="g2">
+    <div>
+      <h4>Files Uploaded</h4>
+      <ul class="cl">
+        <li>laravel/ uploaded as public_html/api/</li>
+        <li>deploy/index.php → public_html/index.php</li>
+        <li>deploy/public_html.htaccess → public_html/.htaccess</li>
+        <li>frontend/dist/index.html → public_html/index.html</li>
+        <li>frontend/dist/assets/ → public_html/assets/</li>
+        <li>frontend/dist/sw.js → public_html/sw.js</li>
+        <li>frontend/dist/workbox-*.js → public_html/</li>
+        <li>frontend/dist/manifest.webmanifest → public_html/</li>
+        <li>All PWA icons uploaded to public_html/</li>
+      </ul>
+    </div>
+    <div>
+      <h4>SSH Commands Run</h4>
+      <ul class="cl">
+        <li>chmod -R 755 storage</li>
+        <li>chmod -R 755 bootstrap/cache</li>
+        <li>Storage symlink created</li>
+        <li>php artisan key:generate --force</li>
+        <li>php artisan migrate --force</li>
+        <li>php artisan db:seed --class=ProductionSeeder</li>
+        <li>php artisan config:cache</li>
+        <li>php artisan route:cache</li>
+        <li>php artisan view:cache</li>
+      </ul>
+    </div>
+    <div>
+      <h4>.env Values Set</h4>
+      <ul class="cl">
+        <li>APP_ENV=production, APP_DEBUG=false</li>
+        <li>APP_URL=https://myeoncasuals.com</li>
+        <li>DB_DATABASE, DB_USERNAME, DB_PASSWORD</li>
+        <li>RAZORPAY_KEY_ID (rzp_live_...)</li>
+        <li>RAZORPAY_KEY_SECRET</li>
+        <li>MAIL_PASSWORD</li>
+        <li>SANCTUM_STATEFUL_DOMAINS</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Post-Deploy</h4>
+      <ul class="cl">
+        <li>Site loads at https://myeoncasuals.com</li>
+        <li>API returns JSON at /api/categories</li>
+        <li>Admin login works</li>
+        <li>Admin password changed</li>
+        <li>Product images load</li>
+        <li>SSL HTTPS active</li>
+        <li>Razorpay live keys confirmed</li>
+        <li>Test order placed successfully</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--border);padding-top:20px">
+    Myeon Casuals — Hostinger Deployment Guide · Generated May 2026 · Verified working on live server u797380248@in-mum-web948
+  </div>
+</div>
+
+</body>
+</html>

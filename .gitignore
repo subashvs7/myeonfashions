@@ -1,0 +1,27 @@
+# Zip archives
+*.zip
+
+# Claude settings
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Laravel
+laravel/vendor/
+laravel/.env
+laravel/storage/logs/*.log
+laravel/storage/framework/cache/
+laravel/storage/framework/sessions/
+laravel/storage/framework/views/
+laravel/bootstrap/cache/
+laravel/public/storage
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Misc
+.sixth/
+package-lock.json

@@ -1,0 +1,1 @@
+import{N as e}from"./index-DwdZsZQY.js";var t={getAll:t=>e.get(`/orders`,{params:t}),getOne:t=>e.get(`/orders/${t}`),create:t=>e.post(`/orders`,t),cancel:t=>e.post(`/orders/${t}/cancel`),invoice:t=>e.get(`/orders/${t}/invoice`)};export{t};

@@ -1,0 +1,73 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Prefer built React index.html over Laravel index.php for root requests
+    DirectoryIndex index.html index.php
+
+    # Security: deny sensitive files
+    <FilesMatch "\.(env|log|lock|sh|sql)$">
+        Require all denied
+    </FilesMatch>
+
+    # Gzip compression
+    <IfModule mod_deflate.c>
+        AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+    </IfModule>
+
+    # Long-lived cache for hashed assets, no-cache for SW and manifest
+    <IfModule mod_expires.c>
+        ExpiresActive On
+        ExpiresByType image/jpeg             "access plus 1 year"
+        ExpiresByType image/png              "access plus 1 year"
+        ExpiresByType image/webp             "access plus 1 year"
+        ExpiresByType image/svg+xml          "access plus 1 year"
+        ExpiresByType text/css               "access plus 1 month"
+        ExpiresByType application/javascript "access plus 1 month"
+    </IfModule>
+
+    <IfModule mod_headers.c>
+        Header set X-Content-Type-Options "nosniff"
+        Header set X-Frame-Options "SAMEORIGIN"
+        Header set Referrer-Policy "strict-origin-when-cross-origin"
+        # Service worker must have root scope
+        <FilesMatch "sw\.js$">
+            Header set Service-Worker-Allowed "/"
+            Header set Cache-Control "no-store"
+        </FilesMatch>
+        <FilesMatch "manifest\.webmanifest$">
+            Header set Cache-Control "no-store"
+        </FilesMatch>
+    </IfModule>
+
+    # Pass Authorization header to Laravel
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Pass XSRF-Token header
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Handle OPTIONS preflight
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^ - [R=204,L]
+
+    # Let real files and directories pass through (assets, storage, sw.js, icons, etc.)
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Always route /api/* and /sanctum/* to Laravel
+    RewriteRule ^api/     index.php [QSA,L]
+    RewriteRule ^sanctum/ index.php [QSA,L]
+
+    # If React SPA is built (index.html exists) → serve as SPA for all other routes
+    RewriteCond %{DOCUMENT_ROOT}/index.html -f
+    RewriteRule ^ index.html [L]
+
+    # Dev fallback: standard Laravel routing when no React build is present
+    RewriteRule ^ index.php [L]
+</IfModule>
